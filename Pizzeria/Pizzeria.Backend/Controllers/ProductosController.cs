@@ -8,11 +8,11 @@ namespace Pizzeria.Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AdministradorController : ControllerBase
+    public class ProductoController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public AdministradorController(DataContext context)
+        public ProductoController(DataContext context)
         {
             _context = context;
         }
@@ -20,50 +20,49 @@ namespace Pizzeria.Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            return Ok(await _context.Administradores.ToListAsync());
+            return Ok(await _context.Productos.ToListAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(int id)
         {
-            var administrador = await _context.Administradores.FirstOrDefaultAsync(c => c.Id == id);
-            if (administrador == null)
+            var producto = await _context.Productos.FirstOrDefaultAsync(c => c.Id == id);
+            if (producto == null)
             {
                 return NotFound();
             }
 
-            return Ok(administrador);
+            return Ok(producto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(Administrador administrador)
+        public async Task<IActionResult> PostAsync(Producto producto)
         {
-            _context.Add(administrador);
+            _context.Add(producto);
             await _context.SaveChangesAsync();
-            return Ok(administrador);
+            return Ok(producto);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var administrador = await _context.Administradores.FirstOrDefaultAsync(c => c.Id == id);
-            if (administrador == null)
+            var producto = await _context.Productos.FirstOrDefaultAsync(c => c.Id == id);
+            if (producto == null)
             {
                 return NotFound();
             }
 
-            _context.Remove(administrador);
+            _context.Remove(producto);
             await _context.SaveChangesAsync();
             return NoContent();
         }
 
         [HttpPut]
-        public async Task<IActionResult> PutAsync(Administrador administrador)
+        public async Task<IActionResult> PutAsync(Producto producto)
         {
-            _context.Update(administrador);
+            _context.Update(producto);
             await _context.SaveChangesAsync();
-            return Ok(administrador);
+            return Ok(producto);
         }
     }
 }
-   

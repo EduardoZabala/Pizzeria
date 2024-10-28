@@ -8,11 +8,11 @@ namespace Pizzeria.Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PruebasController : ControllerBase
+    public class PagoEfectivoController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public PruebasController(DataContext context)
+        public PagoEfectivoController(DataContext context)
         {
             _context = context;
         }
@@ -20,50 +20,49 @@ namespace Pizzeria.Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            return Ok(await _context.Administradorees.ToListAsync());
+            return Ok(await _context.PagoEfectivos.ToListAsync());
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(int id)
         {
-            var country = await _context.Administradorees.FirstOrDefaultAsync(c => c.Id == id);
-            if (country == null)
+            var pagoEfectivo = await _context.PagoEfectivos.FirstOrDefaultAsync(c => c.Id == id);
+            if (pagoEfectivo == null)
             {
                 return NotFound();
             }
 
-            return Ok(country);
+            return Ok(pagoEfectivo);
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync(Administrador country)
+        public async Task<IActionResult> PostAsync(PagoEfectivo pagoEfectivo)
         {
-            _context.Add(country);
+            _context.Add(pagoEfectivo);
             await _context.SaveChangesAsync();
-            return Ok(country);
+            return Ok(pagoEfectivo);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var country = await _context.Administradorees.FirstOrDefaultAsync(c => c.Id == id);
-            if (country == null)
+            var pagoEfectivo = await _context.PagoEfectivos.FirstOrDefaultAsync(c => c.Id == id);
+            if (pagoEfectivo == null)
             {
                 return NotFound();
             }
 
-            _context.Remove(country);
+            _context.Remove(pagoEfectivo);
             await _context.SaveChangesAsync();
             return NoContent();
         }
 
         [HttpPut]
-        public async Task<IActionResult> PutAsync(Administrador country)
+        public async Task<IActionResult> PutAsync(PagoEfectivo pagoEfectivo)
         {
-            _context.Update(country);
+            _context.Update(pagoEfectivo);
             await _context.SaveChangesAsync();
-            return Ok(country);
+            return Ok(pagoEfectivo);
         }
     }
 }
-   

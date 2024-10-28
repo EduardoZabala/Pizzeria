@@ -17,7 +17,7 @@ namespace Pizzeria.Backend.Data
         public DbSet<Promocion> Promociones { get; set; }
         public DbSet<Reseña> Reseñas { get; set; }
         public DbSet<Trabajador> Trabajadores { get; set; }
-        public DbSet<Administrador> Administradorees { get; set; }
+        public DbSet<Administrador> Administradores { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
