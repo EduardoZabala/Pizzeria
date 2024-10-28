@@ -32,7 +32,7 @@ namespace Pizzeria.Shared.Entities
 
         [Display(Name = "Valor del descuento")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public double VlrDescuento { get; set; }
+        public double VlrDescuento { get; set; }   //VALOR O PORCENTAJE? REVISAR
 
 
         public bool Estado { get; set; }//Estado de la promocion Activo o inactiva

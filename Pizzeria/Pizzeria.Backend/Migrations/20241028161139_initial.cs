@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Pizzeria.Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class _1 : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -84,7 +84,7 @@ namespace Pizzeria.Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Administradorees",
+                name: "Administradores",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
@@ -92,9 +92,9 @@ namespace Pizzeria.Backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Administradorees", x => x.Id);
+                    table.PrimaryKey("PK_Administradores", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Administradorees_Usuarios_Id",
+                        name: "FK_Administradores_Usuarios_Id",
                         column: x => x.Id,
                         principalTable: "Usuarios",
                         principalColumn: "Id",
@@ -234,7 +234,7 @@ namespace Pizzeria.Backend.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Administradorees");
+                name: "Administradores");
 
             migrationBuilder.DropTable(
                 name: "PagoEfectivos");

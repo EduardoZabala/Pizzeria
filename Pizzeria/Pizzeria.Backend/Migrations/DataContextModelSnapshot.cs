@@ -32,7 +32,7 @@ namespace Pizzeria.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Administradorees");
+                    b.ToTable("Administradores");
                 });
 
             modelBuilder.Entity("Pizzeria.Shared.Entities.Cliente", b =>

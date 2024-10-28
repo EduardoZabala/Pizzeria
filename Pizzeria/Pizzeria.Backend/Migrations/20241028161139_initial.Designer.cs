@@ -12,8 +12,8 @@ using Pizzeria.Backend.Data;
 namespace Pizzeria.Backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20241028003715_1")]
-    partial class _1
+    [Migration("20241028161139_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,7 +35,7 @@ namespace Pizzeria.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Administradorees");
+                    b.ToTable("Administradores");
                 });
 
             modelBuilder.Entity("Pizzeria.Shared.Entities.Cliente", b =>
