@@ -12,7 +12,7 @@ namespace Pizzeria.Backend.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cliente",
+                name: "Clientes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -25,11 +25,11 @@ namespace Pizzeria.Backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cliente", x => x.Id);
+                    table.PrimaryKey("PK_Clientes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Promocion",
+                name: "Promociones",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -42,7 +42,7 @@ namespace Pizzeria.Backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Promocion", x => x.Id);
+                    table.PrimaryKey("PK_Promociones", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -62,7 +62,7 @@ namespace Pizzeria.Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reseña",
+                name: "Reseñas",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -74,17 +74,17 @@ namespace Pizzeria.Backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reseña", x => x.Id);
+                    table.PrimaryKey("PK_Reseñas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reseña_Cliente_IdCliente",
+                        name: "FK_Reseñas_Clientes_IdCliente",
                         column: x => x.IdCliente,
-                        principalTable: "Cliente",
+                        principalTable: "Clientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Administrador",
+                name: "Administradorees",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
@@ -92,9 +92,9 @@ namespace Pizzeria.Backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Administrador", x => x.Id);
+                    table.PrimaryKey("PK_Administradorees", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Administrador_Usuarios_Id",
+                        name: "FK_Administradorees_Usuarios_Id",
                         column: x => x.Id,
                         principalTable: "Usuarios",
                         principalColumn: "Id",
@@ -102,7 +102,7 @@ namespace Pizzeria.Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Trabajador",
+                name: "Trabajadores",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
@@ -111,9 +111,9 @@ namespace Pizzeria.Backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Trabajador", x => x.Id);
+                    table.PrimaryKey("PK_Trabajadores", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Trabajador_Usuarios_Id",
+                        name: "FK_Trabajadores_Usuarios_Id",
                         column: x => x.Id,
                         principalTable: "Usuarios",
                         principalColumn: "Id",
@@ -121,7 +121,7 @@ namespace Pizzeria.Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Pedido",
+                name: "Pedidos",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -135,29 +135,29 @@ namespace Pizzeria.Backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Pedido", x => x.Id);
+                    table.PrimaryKey("PK_Pedidos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Pedido_Cliente_IdCliente",
+                        name: "FK_Pedidos_Clientes_IdCliente",
                         column: x => x.IdCliente,
-                        principalTable: "Cliente",
+                        principalTable: "Clientes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Pedido_Promocion_IdPromocion",
+                        name: "FK_Pedidos_Promociones_IdPromocion",
                         column: x => x.IdPromocion,
-                        principalTable: "Promocion",
+                        principalTable: "Promociones",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Pedido_Trabajador_IdTrabajador",
+                        name: "FK_Pedidos_Trabajadores_IdTrabajador",
                         column: x => x.IdTrabajador,
-                        principalTable: "Trabajador",
+                        principalTable: "Trabajadores",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PagoEfectivo",
+                name: "PagoEfectivos",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -168,17 +168,17 @@ namespace Pizzeria.Backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PagoEfectivo", x => x.Id);
+                    table.PrimaryKey("PK_PagoEfectivos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PagoEfectivo_Pedido_IdPedido",
+                        name: "FK_PagoEfectivos_Pedidos_IdPedido",
                         column: x => x.IdPedido,
-                        principalTable: "Pedido",
+                        principalTable: "Pedidos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Producto",
+                name: "Productos",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -190,78 +190,72 @@ namespace Pizzeria.Backend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Producto", x => x.Id);
+                    table.PrimaryKey("PK_Productos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Producto_Pedido_IdPedido",
+                        name: "FK_Productos_Pedidos_IdPedido",
                         column: x => x.IdPedido,
-                        principalTable: "Pedido",
+                        principalTable: "Pedidos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PagoEfectivo_IdPedido",
-                table: "PagoEfectivo",
+                name: "IX_PagoEfectivos_IdPedido",
+                table: "PagoEfectivos",
                 column: "IdPedido");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pedido_IdCliente",
-                table: "Pedido",
+                name: "IX_Pedidos_IdCliente",
+                table: "Pedidos",
                 column: "IdCliente");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pedido_IdPromocion",
-                table: "Pedido",
+                name: "IX_Pedidos_IdPromocion",
+                table: "Pedidos",
                 column: "IdPromocion");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Pedido_IdTrabajador",
-                table: "Pedido",
+                name: "IX_Pedidos_IdTrabajador",
+                table: "Pedidos",
                 column: "IdTrabajador");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Producto_IdPedido",
-                table: "Producto",
+                name: "IX_Productos_IdPedido",
+                table: "Productos",
                 column: "IdPedido");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reseña_IdCliente",
-                table: "Reseña",
+                name: "IX_Reseñas_IdCliente",
+                table: "Reseñas",
                 column: "IdCliente");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Usuarios_Id",
-                table: "Usuarios",
-                column: "Id",
-                unique: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Administrador");
+                name: "Administradorees");
 
             migrationBuilder.DropTable(
-                name: "PagoEfectivo");
+                name: "PagoEfectivos");
 
             migrationBuilder.DropTable(
-                name: "Producto");
+                name: "Productos");
 
             migrationBuilder.DropTable(
-                name: "Reseña");
+                name: "Reseñas");
 
             migrationBuilder.DropTable(
-                name: "Pedido");
+                name: "Pedidos");
 
             migrationBuilder.DropTable(
-                name: "Cliente");
+                name: "Clientes");
 
             migrationBuilder.DropTable(
-                name: "Promocion");
+                name: "Promociones");
 
             migrationBuilder.DropTable(
-                name: "Trabajador");
+                name: "Trabajadores");
 
             migrationBuilder.DropTable(
                 name: "Usuarios");

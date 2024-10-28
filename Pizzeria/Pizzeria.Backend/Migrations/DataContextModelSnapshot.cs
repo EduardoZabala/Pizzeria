@@ -32,7 +32,7 @@ namespace Pizzeria.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Administrador");
+                    b.ToTable("Administradorees");
                 });
 
             modelBuilder.Entity("Pizzeria.Shared.Entities.Cliente", b =>
@@ -64,7 +64,7 @@ namespace Pizzeria.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cliente");
+                    b.ToTable("Clientes");
                 });
 
             modelBuilder.Entity("Pizzeria.Shared.Entities.PagoEfectivo", b =>
@@ -88,7 +88,7 @@ namespace Pizzeria.Backend.Migrations
 
                     b.HasIndex("IdPedido");
 
-                    b.ToTable("PagoEfectivo");
+                    b.ToTable("PagoEfectivos");
                 });
 
             modelBuilder.Entity("Pizzeria.Shared.Entities.Pedido", b =>
@@ -126,7 +126,7 @@ namespace Pizzeria.Backend.Migrations
 
                     b.HasIndex("IdTrabajador");
 
-                    b.ToTable("Pedido");
+                    b.ToTable("Pedidos");
                 });
 
             modelBuilder.Entity("Pizzeria.Shared.Entities.Producto", b =>
@@ -154,7 +154,7 @@ namespace Pizzeria.Backend.Migrations
 
                     b.HasIndex("IdPedido");
 
-                    b.ToTable("Producto");
+                    b.ToTable("Productos");
                 });
 
             modelBuilder.Entity("Pizzeria.Shared.Entities.Promocion", b =>
@@ -183,7 +183,7 @@ namespace Pizzeria.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Promocion");
+                    b.ToTable("Promociones");
                 });
 
             modelBuilder.Entity("Pizzeria.Shared.Entities.Reseña", b =>
@@ -211,7 +211,7 @@ namespace Pizzeria.Backend.Migrations
 
                     b.HasIndex("IdCliente");
 
-                    b.ToTable("Reseña");
+                    b.ToTable("Reseñas");
                 });
 
             modelBuilder.Entity("Pizzeria.Shared.Entities.Trabajador", b =>
@@ -228,7 +228,7 @@ namespace Pizzeria.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Trabajador");
+                    b.ToTable("Trabajadores");
                 });
 
             modelBuilder.Entity("Pizzeria.Shared.Entities.Usuario", b =>
@@ -255,9 +255,6 @@ namespace Pizzeria.Backend.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
 
                     b.ToTable("Usuarios");
                 });
