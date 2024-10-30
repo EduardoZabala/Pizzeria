@@ -13,7 +13,6 @@ namespace Pizzeria.Shared.Entities
         [Key]
         public int Id { get; set; }
 
-
         [Display(Name = "Cedula del Usuario")]
         public int Cedula { get; set; }
 
@@ -27,11 +26,11 @@ namespace Pizzeria.Shared.Entities
         public int  ?Telefono { get; set; }
         
         [JsonIgnore]
-        public ICollection<Trabajador> Trabajadores { get; set;}
+        public ICollection<Trabajador> ?Trabajadores { get; set;}
 
 
         [JsonIgnore]
-        public ICollection<Administrador> Administradores { get; set; }
+        public ICollection<Administrador> ?Administradores { get; set; }
 
     }
 }
