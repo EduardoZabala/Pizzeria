@@ -1,0 +1,57 @@
+﻿@inject IRepository repository﻿
+@page "/users"
+
+
+
+<h3>Usuario</h3>
+
+<div class="mb-3">
+    <a class="btn btn-primary" href="/users/create">Nuevo Usuario</a>
+</div>
+
+<GenericList MyList="Usuarios">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Cedula</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var usuario in Usuarios!)
+                {
+                    <tr>
+                        <td>
+                            @usuario.Cedula
+                        </td>
+                        <td>
+
+                            @usuario.Nombre
+                        </td>
+                        <td>
+                            @usuario.Apellido
+                        </td>
+                        <td>
+                            <a class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+
+    public List<Usuario> Usuarios { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var responseHppt = await repository.GetAsync<List<Usuario>>("api/Usuario");
+        Usuarios = responseHppt.Response!;
+    }
+}

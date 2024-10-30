@@ -3,11 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Backend", "Pizzeria.Backend\Pizzeria.Backend.csproj", "{5FE92147-F754-49C8-8880-339A205895D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pizzeria.Backend", "Pizzeria.Backend\Pizzeria.Backend.csproj", "{5FE92147-F754-49C8-8880-339A205895D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Frontend", "Pizzeria.Frontend\Pizzeria.Frontend.csproj", "{0DE30A25-96DC-4869-9A16-B213305049A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pizzeria.Frontend", "Pizzeria.Frontend\Pizzeria.Frontend.csproj", "{0DE30A25-96DC-4869-9A16-B213305049A6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{59950DCC-F5A3-45F5-9ECF-AAE92E03E336} = {59950DCC-F5A3-45F5-9ECF-AAE92E03E336}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pizzeria.Shared", "Pizzeria.Shared\Pizzeria.Shared.csproj", "{59950DCC-F5A3-45F5-9ECF-AAE92E03E336}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pizzeria.Shared", "Pizzeria.Shared\Pizzeria.Shared.csproj", "{59950DCC-F5A3-45F5-9ECF-AAE92E03E336}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
