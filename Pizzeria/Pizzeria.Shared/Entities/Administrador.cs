@@ -20,7 +20,7 @@ namespace Pizzeria.Shared.Entities
         public DateTime FechaIngreso { get; set; }
 
         [JsonIgnore]
-        public Usuario Usuario { get; set; }
+        public Usuario ?Usuario { get; set; }
 
     }
 }

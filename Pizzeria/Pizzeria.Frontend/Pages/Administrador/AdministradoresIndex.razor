@@ -1,0 +1,105 @@
+﻿@inject IRepository Repository
+@inject NavigationManager NavigationManager
+@inject SweetAlertService SweetAlertService
+@page "/administrators"
+
+<h3>Administradores</h3>
+
+<div class="mb-3">
+    <a class="btn btn-primary" href="/administrators/create">Nuevo Administrador</a>
+</div>
+
+<GenericList MyList="Administradores">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Fecha Ingreso</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var administrador in Administradores!)
+                {
+                    <tr>
+                        <td>
+                            @administrador.Id
+                        </td>
+                        <td>
+                            @administrador.FechaIngreso
+                        </td>
+                        <td>
+                            <a href="/administrators/edit/@administrador.Id" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(administrador))>Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    public List<Administrador> Administradores { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        await base.OnInitializedAsync();
+        var responseHppt = await Repository.GetAsync<List<Administrador>>("api/Administrador");
+        if (responseHppt.Error)
+        {
+            var message = await responseHppt.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        Administradores = responseHppt.Response!;
+    }
+
+    private async Task DeleteAsync(Administrador administrador)
+    {
+        var result = await SweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = $"¿Está seguro de que desea borrar el administrador con ID: {administrador.Id}?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true
+            });
+
+        var confirm = string.IsNullOrEmpty(result.Value);
+
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHTTP = await Repository.DeleteAsync($"api/Administrador/{administrador.Id}");
+        if (responseHTTP.Error)
+        {
+            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                var mensajeError = await responseHTTP.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            }
+            return;
+        }
+
+        await LoadAsync();
+        var toast = SweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
+    }
+}

@@ -1,0 +1,76 @@
+﻿@using CurrieTechnologies.Razor.SweetAlert2;
+@using Microsoft.AspNetCore.Components;
+@using Pizzeria.Frontend.Repositories;
+@using Pizzeria.Shared.Entities;
+@page "/clients/edit/{Id:int}"
+
+<h3>Editar Cliente</h3>
+
+@if (cliente is null)
+{
+    <Loading />
+}
+else
+{
+    <ClienteForm @ref="clienteForm" Cliente="cliente" OnValidSubmit="EditAsync" ReturnAction="Return" />
+}
+
+@code {
+    private Cliente? cliente;
+    private ClienteForm? clienteForm;
+
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] private IRepository Repository { get; set; } = null!;
+    [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+    [Parameter] public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHttp = await Repository.GetAsync<Cliente>($"api/Clientes/{Id}");
+
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                NavigationManager.NavigateTo("/clients");
+            }
+            else
+            {
+                var messageError = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            cliente = responseHttp.Response;
+        }
+    }
+
+    private async Task EditAsync()
+    {
+        var responseHttp = await Repository.PutAsync("api/Clientes", cliente);
+
+        if (responseHttp.Error)
+        {
+            var mensajeError = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            return;
+        }
+
+        Return();
+        var toast = SweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro actualizado con éxito.");
+    }
+
+    private void Return()
+    {
+        clienteForm!.FormPostedSuccessfully = true;
+        NavigationManager.NavigateTo("/clients");
+    }
+}

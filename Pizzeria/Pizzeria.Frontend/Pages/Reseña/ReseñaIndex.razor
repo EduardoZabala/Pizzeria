@@ -1,0 +1,90 @@
+﻿@inject IRepository Repository
+@inject NavigationManager NavigationManager
+@inject SweetAlertService SweetAlertService
+@page "/reviews"
+
+<h3>Reseñas</h3>
+
+<div class="mb-3">
+    <a class="btn btn-primary" href="/reviews/create">Nueva Reseña</a>
+</div>
+
+<GenericList MyList="Reseñas">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Fecha de Publicación</th>
+                    <th>Calificación</th>
+                    <th>Comentario</th>
+                    <th>Id de Cliente</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reseña in Reseñas!)
+                {
+                    <tr>
+                        <td>@reseña.FechaPublicacion.ToString("g")</td>
+                        <td>@reseña.Calificacion</td>
+                        <td>@reseña.Comentario</td>
+                        <td>@reseña.IdCliente</td>
+                        <td>
+                            <a href="/reviews/edit/@reseña.Id" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(reseña))">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    public List<Reseña> Reseñas { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        var responseHttp = await Repository.GetAsync<List<Reseña>>("api/Reseña");
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        Reseñas = responseHttp.Response!;
+    }
+
+    private async Task DeleteAsync(Reseña reseña)
+    {
+        var result = await SweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = $"¿Está seguro que desea borrar la reseña del cliente: {reseña.IdCliente}?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true
+            });
+
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHTTP = await Repository.DeleteAsync($"api/Reseña/{reseña.Id}");
+        if (responseHTTP.Error)
+        {
+            var mensajeError = await responseHTTP.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            return;
+        }
+
+        await LoadAsync();
+        await SweetAlertService.FireAsync("Registro borrado con éxito.", icon: SweetAlertIcon.Success);
+    }
+}

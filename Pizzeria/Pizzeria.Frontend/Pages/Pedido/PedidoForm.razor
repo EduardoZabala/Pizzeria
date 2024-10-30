@@ -1,0 +1,87 @@
+﻿@using CurrieTechnologies.Razor.SweetAlert2;
+@using Microsoft.AspNetCore.Components.Forms;
+@using Microsoft.AspNetCore.Components;
+@using Pizzeria.Shared.Entities;
+@using Microsoft.AspNetCore.Components.Routing;
+
+<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
+
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label>Hora de Entrega:</label>
+        <div>
+            <InputDate class="form-control" @bind-Value="@Pedido.HoraEntrega" />
+            <ValidationMessage For="@(() => Pedido.HoraEntrega)" />
+        </div>
+        <label>Dirección:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Pedido.Direccion" />
+            <ValidationMessage For="@(() => Pedido.Direccion)" />
+        </div>
+        <label>Costo Total:</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@Pedido.CostoTotal" />
+            <ValidationMessage For="@(() => Pedido.CostoTotal)" />
+        </div>
+        <label>Id Trabajador:</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@Pedido.IdTrabajador" />
+            <ValidationMessage For="@(() => Pedido.IdTrabajador)" />
+        </div>
+        <label>Id Promoción:</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@Pedido.IdPromocion" />
+            <ValidationMessage For="@(() => Pedido.IdPromocion)" />
+        </div>
+        <label>Id Cliente:</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@Pedido.IdCliente" />
+            <ValidationMessage For="@(() => Pedido.IdCliente)" />
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+    <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+</EditForm>
+
+@code {
+    private EditContext editContext = null!;
+
+    protected override void OnInitialized()
+    {
+        editContext = new(Pedido);
+    }
+
+    [EditorRequired, Parameter] public Pedido Pedido { get; set; } = null!;
+    [EditorRequired, Parameter] public EventCallback OnValidSubmit { get; set; }
+    [EditorRequired, Parameter] public EventCallback ReturnAction { get; set; }
+    [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+    public bool FormPostedSuccessfully { get; set; } = false;
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        var formWasEdited = editContext.IsModified();
+
+        if (!formWasEdited || FormPostedSuccessfully)
+        {
+            return;
+        }
+
+        var result = await SweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = "¿Deseas abandonar la página y perder los cambios?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true
+            });
+
+        var confirm = !string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+
+        context.PreventNavigation();
+    }
+}
