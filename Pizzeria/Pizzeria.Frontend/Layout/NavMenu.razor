@@ -1,66 +1,73 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Pizzeria.Frontend</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿<AuthorizeView Roles="Admin">
+    <Authorized>
+        <div class="top-row ps-3 navbar navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="">Pizzeria.Frontend</a>
+                <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </div>
 
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
+
+
+
+        <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+            <nav class="flex-column">
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="users">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Usuarios
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="administrators">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Administradores
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="workers">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Trabajadores
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="promotions">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Promociones
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="clients">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Clientes
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="orders">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Pedidos
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="products">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Productos
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="cash-payments">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Pago Efectivos
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="reviews">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Reseñas
+                    </NavLink>
+                </div>
+            </nav>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="users">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Usuarios
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="administrators">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Administradores
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="workers">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Trabajadores
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="promotions">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Promociones
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="clients">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Clientes
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="orders">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Pedidos
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="products">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Productos
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="cash-payments">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Pago Efectivos
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="reviews">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Reseñas
-            </NavLink>
-        </div>
-    </nav>
-</div>
+    </Authorized>
+</AuthorizeView>
 
 @code {
     private bool collapseNavMenu = true;
