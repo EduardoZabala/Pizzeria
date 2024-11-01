@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,21 +7,20 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Pizzeria.Shared.Entities;
 
-namespace Pizzeria.Shared.Entities
+namespace Pizzeria.Shared.Enums
 {
-    public class Administrador
+    public class User:IdentityUser
     {
-        [Key]
         [ForeignKey("Usuario")]
-        public int Cedula { get; set; }
 
-        [Display(Name = "Fecha del Ingreso del Administrador")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public DateTime FechaIngreso { get; set; }
+        public int ?IdUsuario { get; set; }
 
         [JsonIgnore]
         public Usuario Usuario { get; set; }
-
+        public UserType UserType { get; set; }
     }
 }
+
+

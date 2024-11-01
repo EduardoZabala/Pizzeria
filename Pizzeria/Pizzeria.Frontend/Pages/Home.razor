@@ -1,7 +1,10 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
-
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+<AuthorizeView>
+    <Authorized>
+        <p>Estas autenticado aguebado</p>
+    </Authorized>
+    <NotAuthorized>
+        <p>No estas autorizado carechimba</p>
+    </NotAuthorized>
+</AuthorizeView>

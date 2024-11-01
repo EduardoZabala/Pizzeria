@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Pizzeria.Shared.Entities
@@ -11,27 +11,19 @@ namespace Pizzeria.Shared.Entities
     public class Usuario
     {
         [Key]
-        public int Id { get; set; }
-
-
-        [Display(Name = "Cedula del Usuario")]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int Cedula { get; set; }
 
+        [Display(Name = "Nombre del Usuario")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string ?Nombre { get; set; }
+        public string  Nombre { get; set; } 
 
+        [Display(Name = "Telefono del usuario")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string ?Apellido { get; set; }
+        public string Telefono { get; set; }
 
+        [Display(Name = "Direccion del usuario")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public int  ?Telefono { get; set; }
-        
-        [JsonIgnore]
-        public ICollection<Trabajador> Trabajadores { get; set;}
-
-
-        [JsonIgnore]
-        public ICollection<Administrador> Administradores { get; set; }
-
+        public string? Address { get; set; }
     }
 }

@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Pizzeria.Shared.Entities;
+using Pizzeria.Shared.Enums;
 namespace Pizzeria.Backend.Data
 {
-    public class DataContext : DbContext
+    public class DataContext : IdentityDbContext<User>
     {
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
@@ -18,12 +20,10 @@ namespace Pizzeria.Backend.Data
         public DbSet<Reseña> Reseñas { get; set; }
         public DbSet<Trabajador> Trabajadores { get; set; }
         public DbSet<Administrador> Administradores { get; set; }
-        
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-           
-        }
+        } 
     }
+    
 }
