@@ -19,11 +19,6 @@
             <InputText class="form-control" @bind-Value="@Usuario.Nombre" />
             <ValidationMessage For="@(() => Usuario.Nombre)" />
         </div>
-        <label>Apellido:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@Usuario.Apellido" />
-            <ValidationMessage For="@(() => Usuario.Apellido)" />
-        </div>
         <label>Telefono:</label>
         <div>
             <InputNumber class="form-control" @bind-Value="@Usuario.Telefono" />

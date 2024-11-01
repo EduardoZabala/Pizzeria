@@ -16,7 +16,7 @@
                 <tr>
                     <th>Cedula</th>
                     <th>Nombre</th>
-                    <th>Apellido</th>
+                    <th>Telefono</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,10 +31,10 @@
                             @usuario.Nombre
                         </td>
                         <td>
-                            @usuario.Apellido
+                            @usuario.Telefono
                         </td>
                         <td>
-                            <a href="/users/edit/@usuario.Id" class="btn btn-warning">Editar</a>
+                            <a href="/users/edit/@usuario.Cedula" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger" @onclick=@(() => DeleteAsync(usuario))>Borrar</button>
 
                         </td>
@@ -84,7 +84,7 @@
             return;
         }
 
-        var responseHTTP = await Repository.DeleteAsync($"api/Usuario/{usuario.Id}");
+        var responseHTTP = await Repository.DeleteAsync($"api/Usuario/{usuario.Cedula}");
         if (responseHTTP.Error)
         {
             if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)

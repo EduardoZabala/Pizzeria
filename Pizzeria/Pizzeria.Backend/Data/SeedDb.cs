@@ -44,13 +44,13 @@ namespace Pizzeria.Backend.Data
         {
             if (!_context.Usuarios.Any())
             {
-                _context.Usuarios.Add(new Usuario { Cedula = 400, Nombre = "Sofia", Address = "Calle-1", Telefono = "4721" });
-                _context.Usuarios.Add(new Usuario { Cedula = 500, Nombre = "Andres",Address = "Calle", Telefono =   "5032" });
-                _context.Usuarios.Add(new Usuario { Cedula = 600, Nombre = "Luisa", Address = "Calle", Telefono =   "6182" });
-                _context.Usuarios.Add(new Usuario { Cedula = 700, Nombre = "Carlos",Address = "Calle", Telefono =   "7256" });
-                _context.Usuarios.Add(new Usuario { Cedula = 800, Nombre = "Laura", Address = "Calle", Telefono =   "8364" });
-                _context.Usuarios.Add(new Usuario { Cedula = 900, Nombre = "Daniel",Address = "Calle", Telefono =   "9481" });
-                _context.Usuarios.Add(new Usuario { Cedula = 1000,Nombre = "Valentina", Address = "Calle", Telefono = "1059" });
+                _context.Usuarios.Add(new Usuario { Cedula = 400, Nombre = "Sofia",    Telefono = "4721" });
+                _context.Usuarios.Add(new Usuario { Cedula = 500, Nombre = "Andres",   Telefono =   "5032" });
+                _context.Usuarios.Add(new Usuario { Cedula = 600, Nombre = "Luisa",    Telefono =   "6182" });
+                _context.Usuarios.Add(new Usuario { Cedula = 700, Nombre = "Carlos",   Telefono =   "7256" });
+                _context.Usuarios.Add(new Usuario { Cedula = 800, Nombre = "Laura",    Telefono =   "8364" });
+                _context.Usuarios.Add(new Usuario { Cedula = 900, Nombre = "Daniel",   Telefono =   "9481" });
+                _context.Usuarios.Add(new Usuario { Cedula = 1000,Nombre = "Valentina",Telefono = "1059" });
             }
           
             await _context.SaveChangesAsync();

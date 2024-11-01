@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Pizzeria.Shared.Entities
@@ -22,9 +23,6 @@ namespace Pizzeria.Shared.Entities
         [Display(Name = "Telefono del usuario")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public string Telefono { get; set; }
-
-        [Display(Name = "Direccion del usuario")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
        
         
         [JsonIgnore]

@@ -9,10 +9,10 @@
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <label>Id:</label>
+        <label>Cedula :</label>
         <div>
-            <InputNumber class="form-control" @bind-Value="@Administrador.Id" />
-            <ValidationMessage For="@(() => Administrador.Id)" />
+            <InputNumber class="form-control" @bind-Value="@Administrador.Cedula" />
+            <ValidationMessage For="@(() => Administrador.Cedula)" />
         </div>
         <label>Fecha Ingreso:</label>
         <div>

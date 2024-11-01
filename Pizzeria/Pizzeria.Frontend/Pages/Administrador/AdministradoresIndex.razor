@@ -14,7 +14,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Id</th>
+                    <th>Cedula</th>
                     <th>Fecha Ingreso</th>
                 </tr>
             </thead>
@@ -23,13 +23,13 @@
                 {
                     <tr>
                         <td>
-                            @administrador.Id
+                            @administrador.Cedula
                         </td>
                         <td>
                             @administrador.FechaIngreso
                         </td>
                         <td>
-                            <a href="/administrators/edit/@administrador.Id" class="btn btn-warning">Editar</a>
+                            <a href="/administrators/edit/@administrador.Cedula" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger" @onclick=@(() => DeleteAsync(administrador))>Borrar</button>
                         </td>
                     </tr>
@@ -65,7 +65,7 @@
         var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
-                Text = $"¿Está seguro de que desea borrar el administrador con ID: {administrador.Id}?",
+                Text = $"¿Está seguro de que desea borrar el administrador con ID: {administrador.Cedula}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true
             });
@@ -77,7 +77,7 @@
             return;
         }
 
-        var responseHTTP = await Repository.DeleteAsync($"api/Administrador/{administrador.Id}");
+        var responseHTTP = await Repository.DeleteAsync($"api/Administrador/{administrador.Cedula}");
         if (responseHTTP.Error)
         {
             if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
