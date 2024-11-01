@@ -1,0 +1,46 @@
+﻿@using CurrieTechnologies.Razor.SweetAlert2;
+@using Microsoft.AspNetCore.Components;
+@using Pizzeria.Frontend.Repositories;
+@using Pizzeria.Shared.Entities;
+@page "/administrators/create"
+
+<h3>Crear Administrador</h3>
+
+<AdministradorForm @ref="administradorForm" Administrador="administrador" OnValidSubmit="CreateAsync" ReturnAction="Return" />
+
+@code {
+    private AdministradorForm? administradorForm;
+
+    [Inject] private IRepository Repository { get; set; } = null!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+
+    private Administrador administrador = new();
+
+    private async Task CreateAsync()
+    {
+        var responseHttp = await Repository.PostAsync("/api/Administrador", administrador);
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message);
+            return;
+        }
+
+        Return();
+        var toast = SweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
+    }
+
+    private void Return()
+    {
+        administradorForm!.FormPostedSuccessfully = true;
+        NavigationManager.NavigateTo("/administrators");
+    }
+}

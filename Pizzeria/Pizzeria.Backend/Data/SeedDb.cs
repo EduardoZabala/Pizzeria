@@ -1,21 +1,30 @@
 ﻿using Pizzeria.Shared.Entities;
 using Pizzeria.Backend.Data;
+using Pizzeria.Shared.Enums;
+using Pizzeria.Backend.Repositories.Interfaces;
 
 namespace Pizzeria.Backend.Data
 {
     public class SeedDb
     {
         private readonly DataContext _context;
+        private readonly IUsersRepository _usersRepository;
 
-        public SeedDb(DataContext context)
+        public SeedDb(DataContext context, IUsersRepository usersRepository)
         {
             _context = context;
+            _usersRepository = usersRepository;
         }
 
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();
+            await CheckRoleAsync();
             await CheckUsuariosAsync();
+            await CheckUserAsync("Jorge@gmail.com", UserType.User );
+            await CheckUserAsync("Sanchez@gmail.com", UserType.Admin);
+            await CheckUserAsync("Cortez@gmail.com", UserType.Admin);
+
             await CheckAdministradoresAsync();
             await CheckTrabajadoresAsync();
             await CheckPromocionesAsync();
@@ -25,35 +34,70 @@ namespace Pizzeria.Backend.Data
             await CheckPagoEfectivosAsync();
             await CheckReseñasAsync();
         }
+        public async Task CheckRoleAsync()
+        {
+            await _usersRepository.CheckRoleAsync(UserType.Admin.ToString());
+            await _usersRepository.CheckRoleAsync(UserType.User.ToString());
 
+        }
         private async Task CheckUsuariosAsync()
         {
             if (!_context.Usuarios.Any())
             {
-                _context.Usuarios.Add(new Usuario { Cedula = 100, Nombre = "Jorge", Apellido = "Ulloa", Telefono = 1012 });
-                _context.Usuarios.Add(new Usuario { Cedula = 200, Nombre = "Camilo", Apellido = "Sanchez", Telefono = 2554 });
-                _context.Usuarios.Add(new Usuario { Cedula = 300, Nombre = "Mariana", Apellido = "Cortez", Telefono = 3654 });
-                _context.Usuarios.Add(new Usuario { Cedula = 400, Nombre = "Sofia", Apellido = "Lopez", Telefono = 4721 });
-                _context.Usuarios.Add(new Usuario { Cedula = 500, Nombre = "Andres", Apellido = "Mendez", Telefono = 5032 });
-                _context.Usuarios.Add(new Usuario { Cedula = 600, Nombre = "Luisa", Apellido = "Hernandez", Telefono = 6182 });
-                _context.Usuarios.Add(new Usuario { Cedula = 700, Nombre = "Carlos", Apellido = "Quintero", Telefono = 7256 });
-                _context.Usuarios.Add(new Usuario { Cedula = 800, Nombre = "Laura", Apellido = "Torres", Telefono = 8364 });
-                _context.Usuarios.Add(new Usuario { Cedula = 900, Nombre = "Daniel", Apellido = "Moreno", Telefono = 9481 });
-                _context.Usuarios.Add(new Usuario { Cedula = 1000, Nombre = "Valentina", Apellido = "Rojas", Telefono = 1059 });
+                _context.Usuarios.Add(new Usuario { Cedula = 400, Nombre = "Sofia",    Telefono = "4721" });
+                _context.Usuarios.Add(new Usuario { Cedula = 500, Nombre = "Andres",   Telefono =   "5032" });
+                _context.Usuarios.Add(new Usuario { Cedula = 600, Nombre = "Luisa",    Telefono =   "6182" });
+                _context.Usuarios.Add(new Usuario { Cedula = 700, Nombre = "Carlos",   Telefono =   "7256" });
+                _context.Usuarios.Add(new Usuario { Cedula = 800, Nombre = "Laura",    Telefono =   "8364" });
+                _context.Usuarios.Add(new Usuario { Cedula = 900, Nombre = "Daniel",   Telefono =   "9481" });
+                _context.Usuarios.Add(new Usuario { Cedula = 1000,Nombre = "Valentina",Telefono = "1059" });
             }
-
+          
             await _context.SaveChangesAsync();
         }
+        private async Task<User> CheckUserAsync( string email,UserType userType)
+        {
+            var user = await _usersRepository.GetUsersAsync(email);
+            try
+            {
+               
+                if (user == null)
+                {
 
+
+
+                    user = new User
+                    {
+                        Email = email,
+                        UserName = email,
+                        UserType = userType
+
+                    };
+
+                    await _usersRepository.AddUserAsync(user, "123456");
+                    await _usersRepository.AddUserToRoleAsync(user, userType.ToString());
+
+                    //Future
+                    //var token = await _usersRepository.GenerateEmailConfirmationTokenAsync(user);
+                    //await _usersRepository.ConfirmEmailAsync(user, token);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                // Aquí puedes registrar el error o manejarlo según tus necesidades
+                Console.WriteLine($"Error en CheckUserAsync: {ex.Message}");
+                // Puedes lanzar una excepción personalizada si lo deseas
+                throw new Exception("Error al verificar o crear el usuario.", ex);
+            }
+            return user;
+        }
         private async Task CheckAdministradoresAsync()
         {
             if (!_context.Administradores.Any())
             {
-                _context.Administradores.Add(new Administrador { Id = 6, FechaIngreso = new DateTime(2023, 1, 5) });
-                _context.Administradores.Add(new Administrador { Id = 7, FechaIngreso = new DateTime(2023, 3, 10) });
-                _context.Administradores.Add(new Administrador { Id = 8, FechaIngreso = new DateTime(2023, 5, 15) });
-                _context.Administradores.Add(new Administrador { Id = 9, FechaIngreso = new DateTime(2023, 7, 20) });
-                _context.Administradores.Add(new Administrador { Id = 10, FechaIngreso = new DateTime(2023, 9, 25) });
+                _context.Administradores.Add(new Administrador { Cedula = 900, FechaIngreso = new DateTime(2023, 3, 10) });
+                _context.Administradores.Add(new Administrador { Cedula =1000, FechaIngreso = new DateTime(2023, 5, 15) });
             }
 
             await _context.SaveChangesAsync();
@@ -63,11 +107,11 @@ namespace Pizzeria.Backend.Data
         {
             if (!_context.Trabajadores.Any())
             {
-                _context.Trabajadores.Add(new Trabajador { Id = 1, Turno = "Mañana", Salario = 1500 });
-                _context.Trabajadores.Add(new Trabajador { Id = 2, Turno = "Tarde", Salario = 1600 });
-                _context.Trabajadores.Add(new Trabajador { Id = 3, Turno = "Noche", Salario = 1700 });
-                _context.Trabajadores.Add(new Trabajador { Id = 4, Turno = "Mañana", Salario = 1550 });
-                _context.Trabajadores.Add(new Trabajador { Id = 5, Turno = "Noche", Salario = 1650 });
+                _context.Trabajadores.Add(new Trabajador { Cedula = 400, Turno = "Mañana", Salario = 1500 });
+                _context.Trabajadores.Add(new Trabajador { Cedula = 500, Turno = "Tarde", Salario = 1600 });
+                _context.Trabajadores.Add(new Trabajador { Cedula = 600, Turno = "Noche", Salario = 1700 });
+                _context.Trabajadores.Add(new Trabajador { Cedula = 700, Turno = "Mañana", Salario = 1550 });
+                _context.Trabajadores.Add(new Trabajador { Cedula = 800, Turno = "Noche", Salario = 1650 });
             }
 
             await _context.SaveChangesAsync();
@@ -105,11 +149,11 @@ namespace Pizzeria.Backend.Data
         {
             if (!_context.Pedidos.Any())
             {
-                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 20, 18, 30, 0), Direccion = "Calle 1 #10-20", CostoTotal = 25000, IdTrabajador = 1, IdPromocion = 1, IdCliente = 1 });
-                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 21, 19, 0, 0), Direccion = "Calle 2 #20-30", CostoTotal = 30000, IdTrabajador = 2, IdPromocion = 2, IdCliente = 2 });
-                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 22, 20, 30, 0), Direccion = "Calle 3 #30-40", CostoTotal = 27000, IdTrabajador = 3, IdPromocion = 3, IdCliente = 3 });
-                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 23, 21, 0, 0), Direccion = "Calle 4 #40-50", CostoTotal = 28000, IdTrabajador = 4, IdPromocion = 4, IdCliente = 4 });
-                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 24, 22, 30, 0), Direccion = "Calle 5 #50-60", CostoTotal = 26000, IdTrabajador = 5, IdPromocion = 5, IdCliente = 5 });
+                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 20, 18, 30, 0), Direccion = "Calle 1 #10-20", CostoTotal = 25000, IdTrabajador = 400, IdPromocion = 1, IdCliente = 1 });
+                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 21, 19, 0, 0), Direccion = "Calle 2 #20-30", CostoTotal = 30000, IdTrabajador =  500, IdPromocion = 2, IdCliente = 2 });
+                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 22, 20, 30, 0), Direccion = "Calle 3 #30-40", CostoTotal = 27000, IdTrabajador = 600, IdPromocion = 3, IdCliente = 3 });
+                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 23, 21, 0, 0), Direccion = "Calle 4 #40-50", CostoTotal = 28000, IdTrabajador =  700, IdPromocion = 4, IdCliente = 4 });
+                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 24, 22, 30, 0), Direccion = "Calle 5 #50-60", CostoTotal = 26000, IdTrabajador = 800, IdPromocion = 5, IdCliente = 5 });
             }
 
             await _context.SaveChangesAsync();

@@ -26,7 +26,7 @@ namespace Pizzeria.Backend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAsync(int id)
         {
-            var administrador = await _context.Administradores.FirstOrDefaultAsync(c => c.Id == id);
+            var administrador = await _context.Administradores.FirstOrDefaultAsync(c => c.Cedula == id);
             if (administrador == null)
             {
                 return NotFound();
@@ -46,7 +46,7 @@ namespace Pizzeria.Backend.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var administrador = await _context.Administradores.FirstOrDefaultAsync(c => c.Id == id);
+            var administrador = await _context.Administradores.FirstOrDefaultAsync(c => c.Cedula == id);
             if (administrador == null)
             {
                 return NotFound();

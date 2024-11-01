@@ -1,0 +1,121 @@
+﻿@inject IRepository Repository
+@inject NavigationManager NavigationManager
+@inject SweetAlertService SweetAlertService
+@page "/orders"
+
+<h3>Pedidos</h3>
+
+<div class="mb-3">
+    <a class="btn btn-primary" href="/orders/create">Nuevo Pedido</a>
+</div>
+
+<GenericList MyList="Pedidos">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Hora de Entrega</th>
+                    <th>Dirección</th>
+                    <th>Costo Total</th>
+                    <th>Id Trabajador</th>
+                    <th>Id Promoción</th>
+                    <th>Id Cliente</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pedido in Pedidos!)
+                {
+                    <tr>
+                        <td>
+                            @pedido.HoraEntrega
+                        </td>
+                        <td>
+                            @pedido.Direccion
+                        </td>
+                        <td>
+                            @pedido.CostoTotal.ToString("C")
+                        </td>
+                        <td>
+                            @pedido.IdTrabajador
+                        </td>
+                        <td>
+                            @pedido.IdPromocion
+                        </td>
+                        <td>
+                            @pedido.IdCliente
+                        </td>
+                        <td>
+                            <a href="/orders/edit/@pedido.Id" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(pedido))>Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    public List<Pedido> Pedidos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        await base.OnInitializedAsync();
+        var responseHttp = await Repository.GetAsync<List<Pedido>>("api/Pedido");
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        Pedidos = responseHttp.Response!;
+    }
+
+    private async Task DeleteAsync(Pedido pedido)
+    {
+        var result = await SweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = $"¿Está seguro que quiere borrar el pedido con dirección: {pedido.Direccion}?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true
+            });
+
+        var confirm = string.IsNullOrEmpty(result.Value);
+
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHTTP = await Repository.DeleteAsync($"api/Pedido/{pedido.Id}");
+        if (responseHTTP.Error)
+        {
+            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                NavigationManager.NavigateTo("/orders");
+            }
+            else
+            {
+                var mensajeError = await responseHTTP.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            }
+            return;
+        }
+
+        await LoadAsync();
+        var toast = SweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
+    }
+}

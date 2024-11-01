@@ -1,0 +1,88 @@
+﻿@inject IRepository Repository
+@inject NavigationManager NavigationManager
+@inject SweetAlertService SweetAlertService
+@page "/cash-payments"
+
+<h3>Pagos Efectivos</h3>
+
+<div class="mb-3">
+    <a class="btn btn-primary" href="/cash-payments/create">Nuevo Pago Efectivo</a>
+</div>
+
+<GenericList MyList="PagosEfectivos">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Fecha de Pago</th>
+                    <th>Estado</th>
+                    <th>Id de Pedido</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pago in PagosEfectivos!)
+                {
+                    <tr>
+                        <td>@pago.FechaPago.ToString("g")</td>
+                        <td>@(pago.Estado ? "Completado" : "Pendiente")</td>
+                        <td>@pago.IdPedido</td>
+                        <td>
+                            <a href="/cash-payments/edit/@pago.Id" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick="@(() => DeleteAsync(pago))">Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    public List<PagoEfectivo> PagosEfectivos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        var responseHttp = await Repository.GetAsync<List<PagoEfectivo>>("api/PagoEfectivo");
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        PagosEfectivos = responseHttp.Response!;
+    }
+
+    private async Task DeleteAsync(PagoEfectivo pago)
+    {
+        var result = await SweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = $"¿Está seguro que desea borrar el pago efectivo del pedido: {pago.IdPedido}?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true
+            });
+
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHTTP = await Repository.DeleteAsync($"api/PagoEfectivo/{pago.Id}");
+        if (responseHTTP.Error)
+        {
+            var mensajeError = await responseHTTP.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            return;
+        }
+
+        await LoadAsync();
+        await SweetAlertService.FireAsync("Registro borrado con éxito.", icon: SweetAlertIcon.Success);
+    }
+}

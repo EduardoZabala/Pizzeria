@@ -38,6 +38,6 @@ namespace Pizzeria.Shared.Entities
         public bool Estado { get; set; }//Estado de la promocion Activo o inactiva
 
         [JsonIgnore]
-        public ICollection<Pedido> Pedidos { get; set; }
+        public ICollection<Pedido> ?Pedidos { get; set; }
     }
 }

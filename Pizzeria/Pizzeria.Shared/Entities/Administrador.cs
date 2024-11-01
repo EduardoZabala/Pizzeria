@@ -13,14 +13,14 @@ namespace Pizzeria.Shared.Entities
     {
         [Key]
         [ForeignKey("Usuario")]
-        public int Id { get; set; }
+        public int Cedula { get; set; }
 
         [Display(Name = "Fecha del Ingreso del Administrador")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public DateTime FechaIngreso { get; set; }
 
         [JsonIgnore]
-        public Usuario Usuario { get; set; }
+        public Usuario ?Usuario { get; set; }
 
     }
 }

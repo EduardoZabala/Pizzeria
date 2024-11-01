@@ -1,0 +1,109 @@
+﻿@inject IRepository Repository
+@inject NavigationManager NavigationManager
+@inject SweetAlertService SweetAlertService
+@page "/workers"
+
+<h3>Trabajadores</h3>
+
+<div class="mb-3">
+    <a class="btn btn-primary" href="/workers/create">Nuevo Trabajador</a>
+</div>
+
+<GenericList MyList="Trabajadores">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Cedula</th>
+                    <th>Turno</th>
+                    <th>Salario</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var trabajador in Trabajadores!)
+                {
+                    <tr>
+                        <td>
+                            @trabajador.Cedula
+                        </td>
+                        <td>
+                            @trabajador.Turno
+                        </td>
+                        <td>
+                            @trabajador.Salario
+                        </td>
+                        <td>
+                            <a href="/workers/edit/@trabajador.Cedula" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(trabajador))>Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    public List<Trabajador> Trabajadores { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        await base.OnInitializedAsync();
+        var responseHttp = await Repository.GetAsync<List<Trabajador>>("api/Trabajador");
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        Trabajadores = responseHttp.Response!;
+    }
+
+    private async Task DeleteAsync(Trabajador trabajador)
+    {
+        var result = await SweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = $"¿Esta seguro que quieres borrar el trabajador con Id: {trabajador.Cedula}?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true
+            });
+
+        var confirm = string.IsNullOrEmpty(result.Value);
+
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHTTP = await Repository.DeleteAsync($"api/Trabajador/{trabajador.Cedula}");
+        if (responseHTTP.Error)
+        {
+            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                NavigationManager.NavigateTo("/workers");
+            }
+            else
+            {
+                var mensajeError = await responseHTTP.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            }
+            return;
+        }
+
+        await LoadAsync();
+        var toast = SweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
+    }
+}

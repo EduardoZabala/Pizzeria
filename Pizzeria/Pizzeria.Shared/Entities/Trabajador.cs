@@ -13,7 +13,7 @@ namespace Pizzeria.Shared.Entities
     {
         [Key]
         [ForeignKey("Usuario")]
-        public int Id { get; set; }
+        public int Cedula { get; set; }
 
         [Display(Name = "Turno del Trabajador")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
@@ -25,9 +25,9 @@ namespace Pizzeria.Shared.Entities
         
         
         [JsonIgnore]
-        public Usuario Usuario { get; set; }
+        public Usuario ?Usuario { get; set; }
 
         [JsonIgnore]
-        public ICollection<Pedido> Pedido { get; set; }
+        public ICollection<Pedido> ?Pedido { get; set; }
     }
 }

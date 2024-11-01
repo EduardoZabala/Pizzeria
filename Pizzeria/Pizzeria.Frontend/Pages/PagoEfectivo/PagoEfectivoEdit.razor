@@ -1,0 +1,67 @@
+﻿@using CurrieTechnologies.Razor.SweetAlert2;
+@using Microsoft.AspNetCore.Components;
+@using Pizzeria.Frontend.Repositories;
+@using Pizzeria.Shared.Entities;
+@page "/cash-payments/edit/{Id:int}"
+
+<h3>Editar Pago Efectivo</h3>
+
+@if (pagoEfectivo is null)
+{
+    <Loading />
+}
+else
+{
+    <PagoEfectivoForm @ref="pagoEfectivoForm" PagoEfectivo="pagoEfectivo" OnValidSubmit="EditAsync" ReturnAction="Return" />
+}
+
+@code {
+    private PagoEfectivo? pagoEfectivo;
+    private PagoEfectivoForm? pagoEfectivoForm;
+
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] private IRepository Repository { get; set; } = null!;
+    [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+    [Parameter] public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHttp = await Repository.GetAsync<PagoEfectivo>($"api/PagoEfectivo/{Id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                NavigationManager.NavigateTo("/cash-payments");
+            }
+            else
+            {
+                var messageError = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            pagoEfectivo = responseHttp.Response;
+        }
+    }
+
+    private async Task EditAsync()
+    {
+        var responseHttp = await Repository.PutAsync("api/PagoEfectivo", pagoEfectivo);
+        if (responseHttp.Error)
+        {
+            var messageError = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+            return;
+        }
+
+        Return();
+        await SweetAlertService.FireAsync("Registro editado con éxito.", icon: SweetAlertIcon.Success);
+    }
+
+    private void Return()
+    {
+        pagoEfectivoForm!.FormPostedSuccessfully = true;
+        NavigationManager.NavigateTo("/cash-payments");
+    }
+}

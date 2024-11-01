@@ -1,0 +1,117 @@
+﻿@inject IRepository Repository
+@inject NavigationManager NavigationManager
+@inject SweetAlertService SweetAlertService
+@page "/clients"
+
+<h3>Clientes</h3>
+
+<div class="mb-3">
+    <a class="btn btn-primary" href="/clients/create">Nuevo Cliente</a>
+</div>
+
+<GenericList MyList="Clientes">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Cédula</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cliente in Clientes!)
+                {
+                    <tr>
+                        <td>
+                            @cliente.Cedula
+                        </td>
+                        <td>
+                            @cliente.Nombre
+                        </td>
+                        <td>
+                            @cliente.Apellido
+                        </td>
+                        <td>
+                            @cliente.Telefono
+                        </td>
+                        <td>
+                            @cliente.Direccion
+                        </td>
+                        <td>
+                            <a href="/clients/edit/@cliente.Id" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(cliente))>Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    public List<Cliente> Clientes { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        await base.OnInitializedAsync();
+        var responseHttp = await Repository.GetAsync<List<Cliente>>("api/Clientes");
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        Clientes = responseHttp.Response!;
+    }
+
+    private async Task DeleteAsync(Cliente cliente)
+    {
+        var result = await SweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = $"¿Está seguro que quiere borrar el cliente: {cliente.Nombre} {cliente.Apellido}?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true
+            });
+
+        var confirm = string.IsNullOrEmpty(result.Value);
+
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHTTP = await Repository.DeleteAsync($"api/Clientes/{cliente.Id}");
+        if (responseHTTP.Error)
+        {
+            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                NavigationManager.NavigateTo("/clients");
+            }
+            else
+            {
+                var mensajeError = await responseHTTP.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            }
+            return;
+        }
+
+        await LoadAsync();
+        var toast = SweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
+    }
+}

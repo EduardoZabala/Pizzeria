@@ -30,9 +30,9 @@ namespace Pizzeria.Shared.Entities
         public string? Direccion { get; set; }
 
         [JsonIgnore]
-        public ICollection<Pedido> Pedidos { get; set; }
+        public ICollection<Pedido> ?Pedidos { get; set; }
 
         [JsonIgnore]
-        public ICollection<Reseña> Reseñas { get; set; }
+        public ICollection<Reseña> ?Reseñas { get; set; }
     }
 }

@@ -1,0 +1,113 @@
+﻿@inject IRepository Repository﻿
+@inject NavigationManager NavigationManager
+@inject SweetAlertService SweetAlertService
+@page "/users"
+
+<h3>Usuario</h3>
+
+<div class="mb-3">
+    <a class="btn btn-primary" href="/users/create">Nuevo Usuario</a>
+</div>
+
+<GenericList MyList="Usuarios">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Cedula</th>
+                    <th>Nombre</th>
+                    <th>Telefono</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var usuario in Usuarios!)
+                {
+                    <tr>
+                        <td>
+                            @usuario.Cedula
+                        </td>
+                        <td>
+
+                            @usuario.Nombre
+                        </td>
+                        <td>
+                            @usuario.Telefono
+                        </td>
+                        <td>
+                            <a href="/users/edit/@usuario.Cedula" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(usuario))>Borrar</button>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+
+    public List<Usuario> Usuarios { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        await base.OnInitializedAsync();
+        var responseHppt = await Repository.GetAsync<List<Usuario>>("api/Usuario");
+        if (responseHppt.Error)
+        {
+            var message = await responseHppt.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        Usuarios = responseHppt.Response!;
+    }
+
+    private async Task DeleteAsync(Usuario usuario)
+    {
+        var result = await SweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = $"¿Esta seguro que quieres borrar el usuario: {usuario.Nombre}?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true
+            });
+
+        var confirm = string.IsNullOrEmpty(result.Value);
+
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHTTP = await Repository.DeleteAsync($"api/Usuario/{usuario.Cedula}");
+        if (responseHTTP.Error)
+        {
+            if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                var mensajeError = await responseHTTP.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            }
+            return;
+        }
+
+        await LoadAsync();
+        var toast = SweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
+    }
+
+}

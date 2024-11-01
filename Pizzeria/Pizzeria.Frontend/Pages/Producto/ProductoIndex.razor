@@ -1,0 +1,90 @@
+﻿@inject IRepository Repository
+@inject NavigationManager NavigationManager
+@inject SweetAlertService SweetAlertService
+@page "/products"
+
+<h3>Productos</h3>
+
+<div class="mb-3">
+    <a class="btn btn-primary" href="/products/create">Nuevo Producto</a>
+</div>
+
+<GenericList MyList="Productos">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Id de Pedido</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var producto in Productos!)
+                {
+                    <tr>
+                        <td>@producto.Nombre</td>
+                        <td>@producto.Precio.ToString("C")</td>
+                        <td>@producto.Cantidad</td>
+                        <td>@producto.IdPedido</td>
+                        <td>
+                            <a href="/products/edit/@producto.Id" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(producto))>Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    public List<Producto> Productos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        var responseHttp = await Repository.GetAsync<List<Producto>>("api/Producto");
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        Productos = responseHttp.Response!;
+    }
+
+    private async Task DeleteAsync(Producto producto)
+    {
+        var result = await SweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = $"¿Está seguro que desea borrar el producto: {producto.Nombre}?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true
+            });
+
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHTTP = await Repository.DeleteAsync($"api/Producto/{producto.Id}");
+        if (responseHTTP.Error)
+        {
+            var mensajeError = await responseHTTP.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            return;
+        }
+
+        await LoadAsync();
+        await SweetAlertService.FireAsync("Registro borrado con éxito.", icon: SweetAlertIcon.Success);
+    }
+}
