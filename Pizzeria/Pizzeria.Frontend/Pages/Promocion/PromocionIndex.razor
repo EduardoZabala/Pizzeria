@@ -1,42 +1,48 @@
-﻿@inject IRepository Repository﻿
+﻿@inject IRepository Repository
 @inject NavigationManager NavigationManager
 @inject SweetAlertService SweetAlertService
-@page "/users"
+@page "/promotions"
 
-<h3>Usuario</h3>
+<h3>Promociones</h3>
 
 <div class="mb-3">
-    <a class="btn btn-primary" href="/users/create">Nuevo Usuario</a>
+    <a class="btn btn-primary" href="/promotions/create">Nueva Promoción</a>
 </div>
 
-<GenericList MyList="Usuarios">
+<GenericList MyList="Promociones">
     <Body>
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Cedula</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
+                    <th>Descripción</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Valor Descuento</th>
+                    <th>Estado</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var usuario in Usuarios!)
+                @foreach (var promocion in Promociones!)
                 {
                     <tr>
                         <td>
-                            @usuario.Cedula
+                            @promocion.Descripcion
                         </td>
                         <td>
-
-                            @usuario.Nombre
+                            @promocion.FechaInicio.ToShortDateString()
                         </td>
                         <td>
-                            @usuario.Apellido
+                            @promocion.FechaFin.ToShortDateString()
                         </td>
                         <td>
-                            <a href="/users/edit/@usuario.Id" class="btn btn-warning">Editar</a>
-                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(usuario))>Borrar</button>
-
+                            @promocion.VlrDescuento
+                        </td>
+                        <td>
+                            @(promocion.Estado ? "Activo" : "Inactivo")
+                        </td>
+                        <td>
+                            <a href="/promotions/edit/@promocion.Id" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(promocion))>Borrar</button>
                         </td>
                     </tr>
                 }
@@ -46,8 +52,7 @@
 </GenericList>
 
 @code {
-
-    public List<Usuario> Usuarios { get; set; }
+    public List<Promocion> Promociones { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,22 +62,22 @@
     private async Task LoadAsync()
     {
         await base.OnInitializedAsync();
-        var responseHppt = await Repository.GetAsync<List<Usuario>>("api/Usuario");
-        if (responseHppt.Error)
+        var responseHttp = await Repository.GetAsync<List<Promocion>>("api/Promocion");
+        if (responseHttp.Error)
         {
-            var message = await responseHppt.GetErrorMessageAsync();
+            var message = await responseHttp.GetErrorMessageAsync();
             await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
             return;
         }
-        Usuarios = responseHppt.Response!;
+        Promociones = responseHttp.Response!;
     }
 
-    private async Task DeleteAsync(Usuario usuario)
+    private async Task DeleteAsync(Promocion promocion)
     {
         var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
-                Text = $"¿Esta seguro que quieres borrar el usuario: {usuario.Nombre}?",
+                Text = $"¿Esta seguro que quiere borrar la promoción: {promocion.Descripcion}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true
             });
@@ -84,12 +89,12 @@
             return;
         }
 
-        var responseHTTP = await Repository.DeleteAsync($"api/Usuario/{usuario.Id}");
+        var responseHTTP = await Repository.DeleteAsync($"api/Promocion/{promocion.Id}");
         if (responseHTTP.Error)
         {
             if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/promotions");
             }
             else
             {
@@ -109,5 +114,4 @@
             });
         await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
     }
-
 }

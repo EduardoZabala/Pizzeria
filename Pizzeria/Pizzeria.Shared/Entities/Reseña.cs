@@ -32,7 +32,7 @@ namespace Pizzeria.Shared.Entities
         public int IdCliente { get; set; }
 
         [JsonIgnore]
-        public Cliente Cliente { get; set; }
+        public Cliente ?Cliente { get; set; }
 
 
 

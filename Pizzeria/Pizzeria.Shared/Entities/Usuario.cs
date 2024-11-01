@@ -12,6 +12,7 @@ namespace Pizzeria.Shared.Entities
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
+
         public int Cedula { get; set; }
 
         [Display(Name = "Nombre del Usuario")]
@@ -24,6 +25,15 @@ namespace Pizzeria.Shared.Entities
 
         [Display(Name = "Direccion del usuario")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
-        public string? Address { get; set; }
+       
+        
+        [JsonIgnore]
+        public ICollection<Trabajador> ?Trabajadores { get; set;}
+
+
+        [JsonIgnore]
+        public ICollection<Administrador> ?Administradores { get; set; }
+
+
     }
 }

@@ -27,7 +27,7 @@ namespace Pizzeria.Shared.Entities
         public int IdPedido { get; set; }
         
         [JsonIgnore]
-        public Pedido Pedido { get; set; }
+        public Pedido ?Pedido { get; set; }
 
     }
 }

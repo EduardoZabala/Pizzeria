@@ -1,0 +1,67 @@
+﻿@using CurrieTechnologies.Razor.SweetAlert2;
+@using Microsoft.AspNetCore.Components;
+@using Pizzeria.Frontend.Repositories;
+@using Pizzeria.Shared.Entities;
+@page "/products/edit/{Id:int}"
+
+<h3>Editar Producto</h3>
+
+@if (producto is null)
+{
+    <Loading />
+}
+else
+{
+    <ProductoForm @ref="productoForm" Producto="producto" OnValidSubmit="EditAsync" ReturnAction="Return" />
+}
+
+@code {
+    private Producto? producto;
+    private ProductoForm? productoForm;
+
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] private IRepository Repository { get; set; } = null!;
+    [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+    [Parameter] public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHttp = await Repository.GetAsync<Producto>($"api/Producto/{Id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                NavigationManager.NavigateTo("/products");
+            }
+            else
+            {
+                var messageError = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            producto = responseHttp.Response;
+        }
+    }
+
+    private async Task EditAsync()
+    {
+        var responseHttp = await Repository.PutAsync("api/Producto", producto);
+        if (responseHttp.Error)
+        {
+            var mensajeError = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            return;
+        }
+
+        Return();
+        await SweetAlertService.FireAsync("Cambios guardados con éxito.", icon: SweetAlertIcon.Success);
+    }
+
+    private void Return()
+    {
+        productoForm!.FormPostedSuccessfully = true;
+        NavigationManager.NavigateTo("/products");
+    }
+}

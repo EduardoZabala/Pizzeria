@@ -25,9 +25,9 @@ namespace Pizzeria.Shared.Entities
         
         
         [JsonIgnore]
-        public Usuario Usuario { get; set; }
+        public Usuario ?Usuario { get; set; }
 
         [JsonIgnore]
-        public ICollection<Pedido> Pedido { get; set; }
+        public ICollection<Pedido> ?Pedido { get; set; }
     }
 }

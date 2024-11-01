@@ -1,42 +1,48 @@
-﻿@inject IRepository Repository﻿
+﻿@inject IRepository Repository
 @inject NavigationManager NavigationManager
 @inject SweetAlertService SweetAlertService
-@page "/users"
+@page "/clients"
 
-<h3>Usuario</h3>
+<h3>Clientes</h3>
 
 <div class="mb-3">
-    <a class="btn btn-primary" href="/users/create">Nuevo Usuario</a>
+    <a class="btn btn-primary" href="/clients/create">Nuevo Cliente</a>
 </div>
 
-<GenericList MyList="Usuarios">
+<GenericList MyList="Clientes">
     <Body>
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Cedula</th>
+                    <th>Cédula</th>
                     <th>Nombre</th>
                     <th>Apellido</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var usuario in Usuarios!)
+                @foreach (var cliente in Clientes!)
                 {
                     <tr>
                         <td>
-                            @usuario.Cedula
+                            @cliente.Cedula
                         </td>
                         <td>
-
-                            @usuario.Nombre
+                            @cliente.Nombre
                         </td>
                         <td>
-                            @usuario.Apellido
+                            @cliente.Apellido
                         </td>
                         <td>
-                            <a href="/users/edit/@usuario.Id" class="btn btn-warning">Editar</a>
-                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(usuario))>Borrar</button>
-
+                            @cliente.Telefono
+                        </td>
+                        <td>
+                            @cliente.Direccion
+                        </td>
+                        <td>
+                            <a href="/clients/edit/@cliente.Id" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(cliente))>Borrar</button>
                         </td>
                     </tr>
                 }
@@ -46,8 +52,7 @@
 </GenericList>
 
 @code {
-
-    public List<Usuario> Usuarios { get; set; }
+    public List<Cliente> Clientes { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,22 +62,22 @@
     private async Task LoadAsync()
     {
         await base.OnInitializedAsync();
-        var responseHppt = await Repository.GetAsync<List<Usuario>>("api/Usuario");
-        if (responseHppt.Error)
+        var responseHttp = await Repository.GetAsync<List<Cliente>>("api/Clientes");
+        if (responseHttp.Error)
         {
-            var message = await responseHppt.GetErrorMessageAsync();
+            var message = await responseHttp.GetErrorMessageAsync();
             await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
             return;
         }
-        Usuarios = responseHppt.Response!;
+        Clientes = responseHttp.Response!;
     }
 
-    private async Task DeleteAsync(Usuario usuario)
+    private async Task DeleteAsync(Cliente cliente)
     {
         var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
-                Text = $"¿Esta seguro que quieres borrar el usuario: {usuario.Nombre}?",
+                Text = $"¿Está seguro que quiere borrar el cliente: {cliente.Nombre} {cliente.Apellido}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true
             });
@@ -84,12 +89,12 @@
             return;
         }
 
-        var responseHTTP = await Repository.DeleteAsync($"api/Usuario/{usuario.Id}");
+        var responseHTTP = await Repository.DeleteAsync($"api/Clientes/{cliente.Id}");
         if (responseHTTP.Error)
         {
             if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/clients");
             }
             else
             {
@@ -109,5 +114,4 @@
             });
         await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
     }
-
 }

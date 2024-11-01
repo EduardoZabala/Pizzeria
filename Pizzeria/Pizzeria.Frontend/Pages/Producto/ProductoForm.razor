@@ -1,0 +1,77 @@
+﻿@using CurrieTechnologies.Razor.SweetAlert2;
+@using Microsoft.AspNetCore.Components.Forms;
+@using Microsoft.AspNetCore.Components;
+@using Pizzeria.Shared.Entities;
+
+<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="mb-3">
+        <label>Nombre:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@Producto.Nombre" />
+            <ValidationMessage For="@(() => Producto.Nombre)" />
+        </div>
+
+        <label>Precio:</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@Producto.Precio" />
+            <ValidationMessage For="@(() => Producto.Precio)" />
+        </div>
+
+        <label>Cantidad:</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@Producto.Cantidad" />
+            <ValidationMessage For="@(() => Producto.Cantidad)" />
+        </div>
+
+        <label>Id de Pedido:</label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@Producto.IdPedido" />
+            <ValidationMessage For="@(() => Producto.IdPedido)" />
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar Cambios</button>
+    <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+</EditForm>
+
+@code {
+    private EditContext editContext = null!;
+
+    protected override void OnInitialized()
+    {
+        editContext = new(Producto);
+    }
+
+    [EditorRequired, Parameter] public Producto Producto { get; set; } = null!;
+    [EditorRequired, Parameter] public EventCallback OnValidSubmit { get; set; }
+    [EditorRequired, Parameter] public EventCallback ReturnAction { get; set; }
+    [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+    public bool FormPostedSuccessfully { get; set; } = false;
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        var formWasEdited = editContext.IsModified();
+
+        if (!formWasEdited || FormPostedSuccessfully)
+        {
+            return;
+        }
+
+        var result = await SweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = "¿Deseas abandonar la página y perder los cambios?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true
+            });
+
+        var confirm = !string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+
+        context.PreventNavigation();
+    }
+}

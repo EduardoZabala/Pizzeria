@@ -33,18 +33,18 @@ namespace Pizzeria.Shared.Entities
         public int IdCliente { get; set; }
 
         [JsonIgnore]
-        public Cliente Cliente { get; set; }
+        public Cliente ?Cliente { get; set; }
 
         [JsonIgnore]
-        public Trabajador Trabajador { get; set; }
+        public Trabajador ?Trabajador { get; set; }
 
         [JsonIgnore]
-        public Promocion Promocion { get; set; }
+        public Promocion ?Promocion { get; set; }
     
         [JsonIgnore]
-        public ICollection<PagoEfectivo> PagoEfectivos { get; set; }
+        public ICollection<PagoEfectivo> ?PagoEfectivos { get; set; }
         [JsonIgnore]
-        public ICollection<Producto> Productos { get; set; }
+        public ICollection<Producto> ?Productos { get; set; }
     }
 
 

@@ -1,0 +1,39 @@
+﻿@using CurrieTechnologies.Razor.SweetAlert2;
+@using Microsoft.AspNetCore.Components;
+@using Pizzeria.Frontend.Repositories;
+@using Pizzeria.Shared.Entities;
+@page "/products/create"
+
+<h3>Crear Producto</h3>
+
+<ProductoForm @ref="productoForm" Producto="producto" OnValidSubmit="CreateAsync" ReturnAction="Return" />
+
+@code {
+    private ProductoForm? productoForm;
+
+    [Inject] private IRepository Repository { get; set; } = null!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+
+    private Producto producto = new();
+
+    private async Task CreateAsync()
+    {
+        var responseHttp = await Repository.PostAsync("/api/Producto", producto);
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message);
+            return;
+        }
+
+        Return();
+        await SweetAlertService.FireAsync("Registro creado con éxito.", icon: SweetAlertIcon.Success);
+    }
+
+    private void Return()
+    {
+        productoForm!.FormPostedSuccessfully = true;
+        NavigationManager.NavigateTo("/products");
+    }
+}

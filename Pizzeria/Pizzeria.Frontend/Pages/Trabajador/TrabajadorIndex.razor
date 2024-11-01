@@ -1,42 +1,40 @@
-﻿@inject IRepository Repository﻿
+﻿@inject IRepository Repository
 @inject NavigationManager NavigationManager
 @inject SweetAlertService SweetAlertService
-@page "/users"
+@page "/workers"
 
-<h3>Usuario</h3>
+<h3>Trabajadores</h3>
 
 <div class="mb-3">
-    <a class="btn btn-primary" href="/users/create">Nuevo Usuario</a>
+    <a class="btn btn-primary" href="/workers/create">Nuevo Trabajador</a>
 </div>
 
-<GenericList MyList="Usuarios">
+<GenericList MyList="Trabajadores">
     <Body>
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Cedula</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
+                    <th>Id</th>
+                    <th>Turno</th>
+                    <th>Salario</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var usuario in Usuarios!)
+                @foreach (var trabajador in Trabajadores!)
                 {
                     <tr>
                         <td>
-                            @usuario.Cedula
+                            @trabajador.Id
                         </td>
                         <td>
-
-                            @usuario.Nombre
+                            @trabajador.Turno
                         </td>
                         <td>
-                            @usuario.Apellido
+                            @trabajador.Salario
                         </td>
                         <td>
-                            <a href="/users/edit/@usuario.Id" class="btn btn-warning">Editar</a>
-                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(usuario))>Borrar</button>
-
+                            <a href="/workers/edit/@trabajador.Id" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(trabajador))>Borrar</button>
                         </td>
                     </tr>
                 }
@@ -46,8 +44,7 @@
 </GenericList>
 
 @code {
-
-    public List<Usuario> Usuarios { get; set; }
+    public List<Trabajador> Trabajadores { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,22 +54,22 @@
     private async Task LoadAsync()
     {
         await base.OnInitializedAsync();
-        var responseHppt = await Repository.GetAsync<List<Usuario>>("api/Usuario");
-        if (responseHppt.Error)
+        var responseHttp = await Repository.GetAsync<List<Trabajador>>("api/Trabajador");
+        if (responseHttp.Error)
         {
-            var message = await responseHppt.GetErrorMessageAsync();
+            var message = await responseHttp.GetErrorMessageAsync();
             await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
             return;
         }
-        Usuarios = responseHppt.Response!;
+        Trabajadores = responseHttp.Response!;
     }
 
-    private async Task DeleteAsync(Usuario usuario)
+    private async Task DeleteAsync(Trabajador trabajador)
     {
         var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
-                Text = $"¿Esta seguro que quieres borrar el usuario: {usuario.Nombre}?",
+                Text = $"¿Esta seguro que quieres borrar el trabajador con Id: {trabajador.Id}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true
             });
@@ -84,12 +81,12 @@
             return;
         }
 
-        var responseHTTP = await Repository.DeleteAsync($"api/Usuario/{usuario.Id}");
+        var responseHTTP = await Repository.DeleteAsync($"api/Trabajador/{trabajador.Id}");
         if (responseHTTP.Error)
         {
             if (responseHTTP.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/workers");
             }
             else
             {
@@ -109,5 +106,4 @@
             });
         await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
     }
-
 }

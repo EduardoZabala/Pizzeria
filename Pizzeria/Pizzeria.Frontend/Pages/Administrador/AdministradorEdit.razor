@@ -1,0 +1,76 @@
+﻿@using CurrieTechnologies.Razor.SweetAlert2;
+@using Microsoft.AspNetCore.Components;
+@using Pizzeria.Frontend.Repositories;
+@using Pizzeria.Shared.Entities;
+@page "/administrators/edit/{Id:int}"
+
+<h3>Editar Administrador</h3>
+
+@if (administrador is null)
+{
+    <Loading />
+}
+else
+{
+    <AdministradorForm @ref="administradorForm" Administrador="administrador" OnValidSubmit="EditAsync" ReturnAction="Return" />
+}
+
+@code {
+    private Administrador? administrador;
+    private AdministradorForm? administradorForm;
+
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] private IRepository Repository { get; set; } = null!;
+    [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+    [Parameter] public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHttp = await Repository.GetAsync<Administrador>($"api/Administrador/{Id}");
+
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                NavigationManager.NavigateTo("/administrators");
+            }
+            else
+            {
+                var messageError = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            administrador = responseHttp.Response;
+        }
+    }
+
+    private async Task EditAsync()
+    {
+        var responseHttp = await Repository.PutAsync("api/Administrador", administrador);
+
+        if (responseHttp.Error)
+        {
+            var mensajeError = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            return;
+        }
+
+        Return();
+        var toast = SweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con éxito.");
+    }
+
+    private void Return()
+    {
+        administradorForm!.FormPostedSuccessfully = true;
+        NavigationManager.NavigateTo("/administrators");
+    }
+}
