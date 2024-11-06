@@ -1,0 +1,80 @@
+/* Estilos generales para el contenedor del login */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fae5d3;
+}
+
+.login-container {
+    background-color: #d9bfa4;
+    padding: 20px;
+    border-radius: 8px;
+    width: 350px;
+    margin: 80px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+    .login-container h3 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        color: #333;
+    }
+
+/* Estilos para los campos de entrada */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+    .form-group label {
+        font-size: 14px;
+        color: #333;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+}
+
+    .input-field::placeholder {
+        color: #aaa;
+    }
+
+/* Estilos para las acciones (botón y enlace) */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.register-link {
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+}
+
+    .register-link:hover {
+        text-decoration: underline;
+    }
+
+.submit-button {
+    background-color: #c3c3c3;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+    .submit-button:hover {
+        background-color: #a9a9a9;
+    }

@@ -1,27 +1,26 @@
 ﻿@page "/Login"
 
-<h3>Iniciar Sesión</h3>
+<div class="login-container">
+    <h3>Acceder a Pizzería</h3>
 
-<EditForm Model="loginDTO" OnValidSubmit="LoginAsync">
-    <DataAnnotationsValidator />
+    <EditForm Model="loginDTO" OnValidSubmit="LoginAsync">
+        <DataAnnotationsValidator />
 
-    <div class="row">
-        <div class="col-4">
-            <div class="mb-3">
-                <label>Email:</label>
-                <div>
-                    <InputText class="form-control" @bind-Value="@loginDTO.Email" />
-                    <ValidationMessage For="@(() => loginDTO.Email)" />
-                </div>
-            </div>
-            <div class="mb-3">
-                <label>Contraseña:</label>
-                <div>
-                    <InputText type="password" class="form-control" @bind-Value="@loginDTO.Password" />
-                    <ValidationMessage For="@(() => loginDTO.Password)" />
-                </div>
-            </div>
-            <button class="btn btn-primary" type="submit">Iniciar Sesión</button>
+        <div class="form-group">
+            <label>Usuario</label>
+            <InputText class="input-field" placeholder="Ingrese su usuario" @bind-Value="loginDTO.Email" />
+            <ValidationMessage For="@(() => loginDTO.Email)" />
         </div>
-    </div>
-</EditForm>
+
+        <div class="form-group">
+            <label>Contraseña</label>
+            <InputText type="password" class="input-field" placeholder="Ingrese su contraseña" @bind-Value="loginDTO.Password" />
+            <ValidationMessage For="@(() => loginDTO.Password)" />
+        </div>
+
+        <div class="form-actions">
+            <a href="#" class="register-link">No tengo cuenta</a>
+            <button class="submit-button" type="submit">Ingresar</button>
+        </div>
+    </EditForm>
+</div>

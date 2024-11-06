@@ -1,17 +1,21 @@
 ﻿@inherits LayoutComponentBase
+
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <AuthLinks />
-            <a href="#" target="_blank">About</a>
+    <AuthorizeView Roles="Admin">
+    <Authorized>
+        <div class="sidebar">
+            <NavMenu />
         </div>
+    </Authorized>
+    </AuthorizeView>
+    <main>
+       <NavPizza />
+            <!--<AuthLinks />--> <!--Creo que me trae el nav de auth-->
+       @Body
+        <FooterPizza />
+        
 
-        <article class="content px-4">
-            @Body
-        </article>
     </main>
+   
 </div>
+
