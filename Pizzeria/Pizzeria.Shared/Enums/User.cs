@@ -18,7 +18,7 @@ namespace Pizzeria.Shared.Enums
         public int ?IdUsuario { get; set; }
 
         [JsonIgnore]
-        public Usuario Usuario { get; set; }
+        public Usuario ?Usuario { get; set; }
         public UserType UserType { get; set; }
     }
 }

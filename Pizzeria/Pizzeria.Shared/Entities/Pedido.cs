@@ -29,11 +29,11 @@ namespace Pizzeria.Shared.Entities
         [ForeignKey("Promocion")]
         public int IdPromocion { get; set; }
 
-        [ForeignKey("Cliente")]
-        public int IdCliente { get; set; }
+        [ForeignKey("Usuario")]
+        public int ?IdUsuario { get; set; }
 
         [JsonIgnore]
-        public Cliente ?Cliente { get; set; }
+        public Usuario ?Usuario { get; set; }
 
         [JsonIgnore]
         public Trabajador ?Trabajador { get; set; }

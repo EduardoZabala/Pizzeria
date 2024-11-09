@@ -13,7 +13,9 @@ namespace Pizzeria.Shared.Enums
         Admin,
 
         [Description("Usuario")]
-        User
+        User,
+        [Description("Cliente")]
+        Client
 
     }
 }

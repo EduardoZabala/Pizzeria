@@ -9,30 +9,27 @@
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
     <div class="mb-3">
-        <label>Cédula:</label>
+
+        <label>Email:</label>
         <div>
-            <InputNumber class="form-control" @bind-Value="@Cliente.Cedula" />
-            <ValidationMessage For="@(() => Cliente.Cedula)" />
+            <InputText class="form-control" @bind-Value="@userDTO.Email" />
+            <ValidationMessage For="@(() => userDTO.Email)" />
         </div>
-        <label>Nombre:</label>
+        <label>IdUsuario:</label>
+        @*NOTA: Aqui va un combo todavia no lo voy a desarrollar*@
         <div>
-            <InputText class="form-control" @bind-Value="@Cliente.Nombre" />
-            <ValidationMessage For="@(() => Cliente.Nombre)" />
+            <InputNumber class="form-control" @bind-Value="@userDTO.IdUsuario" />
+            <ValidationMessage For="@(() => userDTO.IdUsuario)" />
         </div>
-        <label>Apellido:</label>
+        <label>Contraseña:</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Cliente.Apellido" />
-            <ValidationMessage For="@(() => Cliente.Apellido)" />
+            <InputText class="form-control" @bind-Value="@userDTO.Password" />
+            <ValidationMessage For="@(() => userDTO.Password)" />
         </div>
-        <label>Teléfono:</label>
+        <label>Confirmación de contraseña:</label>
         <div>
-            <InputNumber class="form-control" @bind-Value="@Cliente.Telefono" />
-            <ValidationMessage For="@(() => Cliente.Telefono)" />
-        </div>
-        <label>Dirección:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@Cliente.Direccion" />
-            <ValidationMessage For="@(() => Cliente.Direccion)" />
+            <InputText type="password" class="form-control" @bind-Value="@userDTO.PasswordConfirm" />
+            <ValidationMessage For="@(() => userDTO.PasswordConfirm)" />
         </div>
     </div>
 
@@ -41,14 +38,15 @@
 </EditForm>
 
 @code {
+
     private EditContext editContext = null!;
 
     protected override void OnInitialized()
     {
-        editContext = new(Cliente);
+        editContext = new(userDTO);
     }
 
-    [EditorRequired, Parameter] public Cliente Cliente { get; set; } = null!;
+    [EditorRequired, Parameter] public UserDTO userDTO { get; set; } = null!;
     [EditorRequired, Parameter] public EventCallback OnValidSubmit { get; set; }
     [EditorRequired, Parameter] public EventCallback ReturnAction { get; set; }
     [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;

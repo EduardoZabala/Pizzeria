@@ -33,5 +33,10 @@ namespace Pizzeria.Shared.Entities
         public ICollection<Administrador> ?Administradores { get; set; }
 
 
+        [JsonIgnore]
+        public ICollection<Pedido>? Pedidos { get; set; }
+
+        [JsonIgnore]
+        public ICollection<Reseña>? Reseñas { get; set; }
     }
 }

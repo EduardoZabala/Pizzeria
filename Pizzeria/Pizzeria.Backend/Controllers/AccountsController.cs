@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Pizzeria.Backend.Data;
 using Pizzeria.Backend.Repositories.Interfaces;
 using Pizzeria.Shared.DTOs;
 using Pizzeria.Shared.Enums;
@@ -15,11 +17,13 @@ namespace Pizzeria.Backend.Controllers
     {
         private readonly IUsersRepository _usersRepository;
         private readonly IConfiguration _configuration;
+        private readonly DataContext _context;
 
-        public AccountsController(IUsersRepository usersRepository, IConfiguration configuration)
+        public AccountsController(IUsersRepository usersRepository, IConfiguration configuration , DataContext context)
         {
             _usersRepository = usersRepository;
             _configuration = configuration;
+            _context = context;
         }
 
         [HttpPost("CreateUser")]
@@ -48,7 +52,12 @@ namespace Pizzeria.Backend.Controllers
 
             return BadRequest("Email o contraseña incorrectos.");
         }
+        [HttpGet]
 
+        public async Task<IActionResult> GetAsync()
+        {
+            return Ok(await _context.Users.ToListAsync());
+        }
         private TokenDTO BuildToken(User user)
         {
             var claims = new List<Claim>
