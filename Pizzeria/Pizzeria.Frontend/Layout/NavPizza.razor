@@ -7,6 +7,13 @@
         <a href="/Promociones">Promociones</a>
         <a href="#">Reseñas</a>
         <a href="/Login">Mi cuenta</a>
+        <AuthorizeView>
+            <Authorized>
+                <span>Hola, @context.User.Identity!.Name</span>
+                <a href="Logout">Cerrar Sesión</a>
+            </Authorized>
+        </AuthorizeView>
+
     </div>
 </div>
 
