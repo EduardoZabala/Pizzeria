@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pizzeria.Shared.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,8 +13,7 @@ namespace Pizzeria.Shared.Entities
     public  class Trabajador
     {
         [Key]
-        [ForeignKey("Usuario")]
-        public int Cedula { get; set; }
+        public string Cedula { get; set; }
 
         [Display(Name = "Turno del Trabajador")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
@@ -25,7 +25,7 @@ namespace Pizzeria.Shared.Entities
         
         
         [JsonIgnore]
-        public Usuario ?Usuario { get; set; }
+        public User ?Users { get; set; }
 
         [JsonIgnore]
         public ICollection<Pedido> ?Pedido { get; set; }

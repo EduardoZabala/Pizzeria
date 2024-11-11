@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Pizzeria.Shared.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -24,16 +25,16 @@ namespace Pizzeria.Shared.Entities
         public double CostoTotal { get; set; }
 
         [ForeignKey("Trabajador")]
-        public int IdTrabajador { get; set; }
+        public string IdTrabajador { get; set; }
 
         [ForeignKey("Promocion")]
         public int IdPromocion { get; set; }
 
-        [ForeignKey("Usuario")]
-        public int ?IdUsuario { get; set; }
+        
+        public string ?CedulaUsuario { get; set; }
 
         [JsonIgnore]
-        public Usuario ?Usuario { get; set; }
+        public User ?Users { get; set; }
 
         [JsonIgnore]
         public Trabajador ?Trabajador { get; set; }

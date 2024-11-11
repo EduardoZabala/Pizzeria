@@ -10,27 +10,48 @@
     <DataAnnotationsValidator />
     <div class="mb-3">
 
-        <label>Email:</label>
+        <label>Cedula:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@userDTO.Cedula" />
+            <ValidationMessage For="@(() => userDTO.Cedula)" />
+        </div>
+        <label>Direccion:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@userDTO.Direccion" />
+            <ValidationMessage For="@(() => userDTO.Direccion)" />
+        </div>
+        <label>Telefono:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@userDTO.PhoneNumber" />
+            <ValidationMessage For="@(() => userDTO.PhoneNumber)" />
+        </div>
+        <label>Correo:</label>
         <div>
             <InputText class="form-control" @bind-Value="@userDTO.Email" />
             <ValidationMessage For="@(() => userDTO.Email)" />
-        </div>
-        <label>IdUsuario:</label>
-        @*NOTA: Aqui va un combo todavia no lo voy a desarrollar*@
-        <div>
-            <InputNumber class="form-control" @bind-Value="@userDTO.IdUsuario" />
-            <ValidationMessage For="@(() => userDTO.IdUsuario)" />
         </div>
         <label>Contraseña:</label>
         <div>
             <InputText class="form-control" @bind-Value="@userDTO.Password" />
             <ValidationMessage For="@(() => userDTO.Password)" />
         </div>
+        
         <label>Confirmación de contraseña:</label>
         <div>
             <InputText type="password" class="form-control" @bind-Value="@userDTO.PasswordConfirm" />
             <ValidationMessage For="@(() => userDTO.PasswordConfirm)" />
         </div>
+        
+        @if (IsAdmin.GetValueOrDefault())
+        {
+            <label>Tipo de Usuario:</label>
+            <InputSelect class="form-control" @bind-Value="@userDTO.UserType">
+                <option value="" disabled>Seleccione el tipo de usuario</option>
+                <option value="@UserType.Client">Cliente</option>
+                <option value="@UserType.Admin">Administrador</option>
+                <option value="@UserType.User">Empleado</option>
+            </InputSelect>
+        }
     </div>
 
     <button class="btn btn-primary" type="submit">Guardar Cambios</button>
@@ -38,10 +59,12 @@
 </EditForm>
 
 @code {
-
+    [Parameter]
+    public bool? IsAdmin { get; set; }
     private EditContext editContext = null!;
-
-    protected override void OnInitialized()
+    
+    
+    protected override async Task OnInitializedAsync()
     {
         editContext = new(userDTO);
     }
@@ -70,9 +93,9 @@
             });
 
         var confirm = !string.IsNullOrEmpty(result.Value);
-        if (confirm)
+        if (!confirm) 
         {
-            return;
+            context.PreventNavigation();
         }
 
         context.PreventNavigation();

@@ -28,7 +28,7 @@
                         <td>@reseña.FechaPublicacion.ToString("g")</td>
                         <td>@reseña.Calificacion</td>
                         <td>@reseña.Comentario</td>
-                        <td>@reseña.IdUsuario</td>
+                        <td>@reseña.CedulaUsuario</td>
                         <td>
                             <a href="/reviews/edit/@reseña.Id" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger" @onclick="@(() => DeleteAsync(reseña))">Borrar</button>
@@ -65,7 +65,7 @@
         var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
-                Text = $"¿Está seguro que desea borrar la reseña del cliente: {reseña.IdUsuario}?",
+                Text = $"¿Está seguro que desea borrar la reseña del cliente: {reseña.CedulaUsuario}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true
             });

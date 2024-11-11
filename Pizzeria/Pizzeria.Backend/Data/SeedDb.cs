@@ -20,11 +20,17 @@ namespace Pizzeria.Backend.Data
         {
             await _context.Database.EnsureCreatedAsync();
             await CheckRoleAsync();
-            await CheckUsuariosAsync();
-            await CheckUserAsync("Jorge@gmail.com", UserType.User );
-            await CheckUserAsync("Sanchez@gmail.com", UserType.Admin);
-            await CheckUserAsync("Cortez@gmail.com", UserType.Admin);
+            await CheckUserAsync("100", "Calle-3", "312123", "User100@gmail.com", UserType.User);
+            await CheckUserAsync("200", "Calle-3", "312123", "User200@gmail.com", UserType.User);
+            await CheckUserAsync("300", "Calle-3", "312", "User300@gmail.com", UserType.User);
+            await CheckUserAsync("400", "Calle-3", "312", "User400@gmail.com", UserType.User);
+            await CheckUserAsync("500", "Calle-3", "312", "User500@gmail.com", UserType.Client);
+            await CheckUserAsync("600", "Calle-3", "312", "User600@gmail.com", UserType.Client);
+            await CheckUserAsync("700", "Calle-3", "312", "User700@gmail.com", UserType.Client);
+            await CheckUserAsync("800", "Calle-3", "312", "User800@gmail.com", UserType.Client);
 
+            await CheckUserAsync("900", "Calle-3", "312", "User900@gmail.com", UserType.Admin);
+            await CheckUserAsync("1000", "Calle-3", "312", "User1000@gmail.com", UserType.Admin);
             await CheckAdministradoresAsync();
             await CheckTrabajadoresAsync();
             await CheckPromocionesAsync();
@@ -37,26 +43,12 @@ namespace Pizzeria.Backend.Data
         {
             await _usersRepository.CheckRoleAsync(UserType.Admin.ToString());
             await _usersRepository.CheckRoleAsync(UserType.User.ToString());
-
+            await _usersRepository.CheckRoleAsync(UserType.Client.ToString());
         }
-        private async Task CheckUsuariosAsync()
+        
+        private async Task<User> CheckUserAsync(string Cedula,string Direccion,string Phone ,string email,UserType userType)
         {
-            if (!_context.Usuarios.Any())
-            {
-                _context.Usuarios.Add(new Usuario { Cedula = 400, Nombre = "Sofia",    Telefono = "4721" });
-                _context.Usuarios.Add(new Usuario { Cedula = 500, Nombre = "Andres",   Telefono =   "5032" });
-                _context.Usuarios.Add(new Usuario { Cedula = 600, Nombre = "Luisa",    Telefono =   "6182" });
-                _context.Usuarios.Add(new Usuario { Cedula = 700, Nombre = "Carlos",   Telefono =   "7256" });
-                _context.Usuarios.Add(new Usuario { Cedula = 800, Nombre = "Laura",    Telefono =   "8364" });
-                _context.Usuarios.Add(new Usuario { Cedula = 900, Nombre = "Daniel",   Telefono =   "9481" });
-                _context.Usuarios.Add(new Usuario { Cedula = 1000,Nombre = "Valentina",Telefono = "1059" });
-            }
-          
-            await _context.SaveChangesAsync();
-        }
-        private async Task<User> CheckUserAsync( string email,UserType userType)
-        {
-            var user = await _usersRepository.GetUsersAsync(email);
+            var user = await _usersRepository.GetUsersAsync(email);//Valida que no exista un usuario con ese correo
             try
             {
                
@@ -67,6 +59,9 @@ namespace Pizzeria.Backend.Data
 
                     user = new User
                     {
+                        Cedula = Cedula,
+                        Direccion = Direccion,
+                        PhoneNumber = Phone ,
                         Email = email,
                         UserName = email,
                         UserType = userType
@@ -95,8 +90,8 @@ namespace Pizzeria.Backend.Data
         {
             if (!_context.Administradores.Any())
             {
-                _context.Administradores.Add(new Administrador { Cedula = 900, FechaIngreso = new DateTime(2023, 3, 10) });
-                _context.Administradores.Add(new Administrador { Cedula =1000, FechaIngreso = new DateTime(2023, 5, 15) });
+                _context.Administradores.Add(new Administrador { Cedula = "900", FechaIngreso = new DateTime(2023, 3, 10) });
+                _context.Administradores.Add(new Administrador { Cedula ="1000", FechaIngreso = new DateTime(2023, 5, 15) });
             }
 
             await _context.SaveChangesAsync();
@@ -106,11 +101,12 @@ namespace Pizzeria.Backend.Data
         {
             if (!_context.Trabajadores.Any())
             {
-                _context.Trabajadores.Add(new Trabajador { Cedula = 400, Turno = "Mañana", Salario = 1500 });
-                _context.Trabajadores.Add(new Trabajador { Cedula = 500, Turno = "Tarde", Salario = 1600 });
-                _context.Trabajadores.Add(new Trabajador { Cedula = 600, Turno = "Noche", Salario = 1700 });
-                _context.Trabajadores.Add(new Trabajador { Cedula = 700, Turno = "Mañana", Salario = 1550 });
-                _context.Trabajadores.Add(new Trabajador { Cedula = 800, Turno = "Noche", Salario = 1650 });
+
+                _context.Trabajadores.Add(new Trabajador { Cedula = "100", Turno = "Mañana", Salario = 1500 });
+                _context.Trabajadores.Add(new Trabajador { Cedula = "200", Turno = "Mañana", Salario = 1500 });
+                _context.Trabajadores.Add(new Trabajador { Cedula = "300", Turno = "Mañana", Salario = 1500 });
+                _context.Trabajadores.Add(new Trabajador { Cedula = "400", Turno = "Tarde", Salario = 1600 });
+                
             }
 
             await _context.SaveChangesAsync();
@@ -136,11 +132,10 @@ namespace Pizzeria.Backend.Data
         {
             if (!_context.Pedidos.Any())
             {
-                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 20, 18, 30, 0), Direccion = "Calle 1 #10-20", CostoTotal = 25000, IdTrabajador = 400, IdPromocion = 1, IdUsuario = 600 });
-                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 21, 19, 0, 0), Direccion = "Calle 2 #20-30", CostoTotal = 30000, IdTrabajador =  500, IdPromocion = 2, IdUsuario = 700 });
-                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 22, 20, 30, 0), Direccion = "Calle 3 #30-40", CostoTotal = 27000, IdTrabajador = 600, IdPromocion = 3, IdUsuario = 800 });
-                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 23, 21, 0, 0), Direccion = "Calle 4 #40-50", CostoTotal = 28000, IdTrabajador =  700, IdPromocion = 4, IdUsuario = 400 });
-                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 24, 22, 30, 0), Direccion = "Calle 5 #50-60", CostoTotal = 26000, IdTrabajador = 800, IdPromocion = 5, IdUsuario = 500 });
+                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 20, 18, 30, 0), Direccion = "Calle 1 #10-20", CostoTotal = 25000, IdTrabajador = "100", IdPromocion = 1, CedulaUsuario = "600" });
+                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 21, 19, 0, 0), Direccion = "Calle 2 #20-30", CostoTotal = 30000, IdTrabajador =  "200", IdPromocion = 2, CedulaUsuario = "700" });
+                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 22, 20, 30, 0), Direccion = "Calle 3 #30-40", CostoTotal = 27000, IdTrabajador = "300", IdPromocion = 3, CedulaUsuario = "800" });
+                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 23, 21, 0, 0), Direccion = "Calle 4 #40-50", CostoTotal = 28000, IdTrabajador =  "400", IdPromocion = 4, CedulaUsuario = "500" });
             }
 
             await _context.SaveChangesAsync();
@@ -154,7 +149,6 @@ namespace Pizzeria.Backend.Data
                 _context.Productos.Add(new Producto { Nombre = "Pizza Hawaiana", Precio = 14000, Cantidad = 1, IdPedido = 2 });
                 _context.Productos.Add(new Producto { Nombre = "Pizza Margarita", Precio = 13000, Cantidad = 1, IdPedido = 3 });
                 _context.Productos.Add(new Producto { Nombre = "Pizza Cuatro Quesos", Precio = 15000, Cantidad = 2, IdPedido = 4 });
-                _context.Productos.Add(new Producto { Nombre = "Pizza Vegetariana", Precio = 16000, Cantidad = 1, IdPedido = 5 });
             }
 
             await _context.SaveChangesAsync();
@@ -168,7 +162,6 @@ namespace Pizzeria.Backend.Data
                 _context.PagoEfectivos.Add(new PagoEfectivo { FechaPago = new DateTime(2023, 10, 21), Estado = true, IdPedido = 2 });
                 _context.PagoEfectivos.Add(new PagoEfectivo { FechaPago = new DateTime(2023, 10, 22), Estado = false, IdPedido = 3 });
                 _context.PagoEfectivos.Add(new PagoEfectivo { FechaPago = new DateTime(2023, 10, 23), Estado = true, IdPedido = 4 });
-                _context.PagoEfectivos.Add(new PagoEfectivo { FechaPago = new DateTime(2023, 10, 24), Estado = false, IdPedido = 5 });
             }
 
             await _context.SaveChangesAsync();
@@ -178,11 +171,10 @@ namespace Pizzeria.Backend.Data
         {
             if (!_context.Reseñas.Any())
             {
-                _context.Reseñas.Add(new Reseña { FechaPublicacion = new DateTime(2023, 10, 20), Calificacion = 5, Comentario = "Excelente servicio", IdUsuario = 400 });
-                _context.Reseñas.Add(new Reseña { FechaPublicacion = new DateTime(2023, 10, 21), Calificacion = 4, Comentario = "Muy buena pizza", IdUsuario = 500 });
-                _context.Reseñas.Add(new Reseña { FechaPublicacion = new DateTime(2023, 10, 22), Calificacion = 3, Comentario = "Tiempo de entrega largo", IdUsuario = 600 });
-                _context.Reseñas.Add(new Reseña { FechaPublicacion = new DateTime(2023, 10, 23), Calificacion = 4, Comentario = "Sabor excelente", IdUsuario = 700 });
-                _context.Reseñas.Add(new Reseña { FechaPublicacion = new DateTime(2023, 10, 24), Calificacion = 5, Comentario = "Totalmente recomendable", IdUsuario = 800 });
+                _context.Reseñas.Add(new Reseña { FechaPublicacion = new DateTime(2023, 10, 21), Calificacion = 4, Comentario = "Muy buena pizza",    CedulaUsuario = "500" });
+                _context.Reseñas.Add(new Reseña { FechaPublicacion = new DateTime(2023, 10, 22), Calificacion = 3, Comentario = "Tiempo de entrega largo", CedulaUsuario= "600" });
+                _context.Reseñas.Add(new Reseña { FechaPublicacion = new DateTime(2023, 10, 23), Calificacion = 4, Comentario = "Sabor excelente",         CedulaUsuario= "700" });
+                _context.Reseñas.Add(new Reseña { FechaPublicacion = new DateTime(2023, 10, 24), Calificacion = 5, Comentario = "Totalmente recomendable", CedulaUsuario= "800" });
             }
 
             await _context.SaveChangesAsync();

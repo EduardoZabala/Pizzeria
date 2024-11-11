@@ -11,7 +11,7 @@
     <div class="mb-3">
         <label>Cedula:</label>
         <div>
-            <InputNumber class="form-control" @bind-Value="@Trabajador.Cedula" />
+            <InputText class="form-control" @bind-Value="@Trabajador.Cedula" />
             <ValidationMessage For="@(() => Trabajador.Cedula)" />
         </div>
         <label>Turno:</label>

@@ -1,7 +1,7 @@
 ﻿@inject IRepository Repository﻿
 @inject NavigationManager NavigationManager
 @inject SweetAlertService SweetAlertService
-@page "/administrationUsers"
+@page "/Users"
 
 <h3>Usuario</h3>
 
@@ -14,6 +14,9 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>Cedula</th>
+                    <th>Direccion</th>
+                    <th>Telefono</th>
                     <th>Correo</th>
                     <th>IdUsuario</th>
                     <th>UserName</th>
@@ -24,18 +27,23 @@
                 {
                     <tr>
                         <td>
-                            @usuario.Email
+                            @usuario.Cedula
                         </td>
                         <td>
-                            @usuario.IdUsuario
+                            @usuario.Direccion
+                        </td>
+                        <td>
+                            @usuario.PhoneNumber
+                        </td>
+                        <td>
+                            @usuario.Email
                         </td>
                         <td>
                             @usuario.UserName
                         </td>
                         <td>
-                            @*  <a href="/users/edit/@usuario.Cedula" class="btn btn-warning">Editar</a>
+                            @*<a href="/users/edit/@usuario.Cedula" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger" @onclick=@(() => DeleteAsync(usuario))>Borrar</button> *@
-
                         </td>
                     </tr>
                 }
@@ -67,12 +75,12 @@
         users = responseHppt.Response!;
 
     }
-    private async Task DeleteAsync(Usuario usuario)
+    private async Task DeleteAsync(User usuario)
     {
         var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
-                Text = $"¿Esta seguro que quieres borrar el usuario: {usuario.Nombre}?",
+                Text = $"¿Esta seguro que quieres borrar el usuario: {usuario.UserName}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true
             });

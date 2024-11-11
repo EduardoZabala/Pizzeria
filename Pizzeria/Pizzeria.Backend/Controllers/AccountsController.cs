@@ -64,7 +64,9 @@ namespace Pizzeria.Backend.Controllers
             {
                 new(ClaimTypes.Name, user.Email!),
                 new(ClaimTypes.Role, user.UserType.ToString()),
-                new("UsuarioId", user.IdUsuario.ToString()!)
+                new("Cedula", user.Cedula.ToString()!),
+                new("Phone", user.PhoneNumber.ToString()!),
+                new("Address", user.Direccion.ToString()!)
                 
             };
 

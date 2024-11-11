@@ -26,7 +26,7 @@
         </div>
         <label>Id Trabajador:</label>
         <div>
-            <InputNumber class="form-control" @bind-Value="@Pedido.IdTrabajador" />
+            <InputText class="form-control" @bind-Value="@Pedido.IdTrabajador" />
             <ValidationMessage For="@(() => Pedido.IdTrabajador)" />
         </div>
         <label>Id Promoción:</label>
@@ -36,8 +36,8 @@
         </div>
         <label>Id Cliente:</label>
         <div>
-            <InputNumber class="form-control" @bind-Value="@Pedido.IdUsuario" />
-            <ValidationMessage For="@(() => Pedido.IdUsuario)" />
+            <InputText class="form-control" @bind-Value="@Pedido.CedulaUsuario" />
+            <ValidationMessage For="@(() => Pedido.CedulaUsuario)" />
         </div>
     </div>
 

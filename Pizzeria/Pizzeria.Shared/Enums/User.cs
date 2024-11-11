@@ -13,12 +13,13 @@ namespace Pizzeria.Shared.Enums
 {
     public class User:IdentityUser
     {
-        [ForeignKey("Usuario")]
+        
+        public string Cedula {  get; set; }
 
-        public int ?IdUsuario { get; set; }
+        [Display(Name = "Direccion")]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        public string Direccion { get; set; }
 
-        [JsonIgnore]
-        public Usuario ?Usuario { get; set; }
         public UserType UserType { get; set; }
     }
 }
