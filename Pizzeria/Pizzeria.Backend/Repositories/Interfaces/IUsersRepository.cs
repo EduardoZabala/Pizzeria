@@ -22,6 +22,13 @@ namespace Pizzeria.Backend.Repositories.Interfaces
 
         Task LogoutAsync();
 
+        //Confirmacion de correo
+        Task<string> GenerateEmailConfirmationTokenAsync(User user);
+
+        Task<IdentityResult> ConfirmEmailAsync(User user, string token);
+
+        Task<User> GetUserAsync(Guid userId);
+
     }
 
 }

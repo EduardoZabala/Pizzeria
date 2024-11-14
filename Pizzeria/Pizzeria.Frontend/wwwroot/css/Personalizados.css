@@ -21,6 +21,7 @@ main {
     color: white;
     text-align: center;
     padding: 20px;
+    margin-bottom: 2rem;
 }
 
 .header h1 {

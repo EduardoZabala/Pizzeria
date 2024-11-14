@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Pizzeria.Backend.Data;
+using Pizzeria.Backend.Helpers;
 using Pizzeria.Backend.Repositories.Implementations;
 using Pizzeria.Backend.Repositories.Interfaces;
-using Pizzeria.Shared.Entities;
 using Pizzeria.Shared.Enums;
 using System.Text;
 
@@ -18,22 +18,29 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=LocalConnection"));
+builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer("name=EduardoConnection"));
 builder.Services.AddTransient<SeedDb>();
 //Agregamos la url del front
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:8000//") });
-
+builder.Services.AddScoped<IMailHelper, MailHelper>();
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+
 
 
 builder.Services.AddIdentity<User, IdentityRole>(x =>
 {
+    x.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+    x.SignIn.RequireConfirmedEmail = true;
     x.User.RequireUniqueEmail = true;
     x.Password.RequireDigit = false;
     x.Password.RequiredUniqueChars = 0;
     x.Password.RequireLowercase = false;
     x.Password.RequireNonAlphanumeric = false;
     x.Password.RequireUppercase = false;
+    x.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    x.Lockout.MaxFailedAccessAttempts = 3;
+    x.Lockout.AllowedForNewUsers = true;
+
 })
 .AddEntityFrameworkStores<DataContext>()
 .AddDefaultTokenProviders();

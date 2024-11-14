@@ -5,7 +5,6 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @page "/register"
 
-<h3>Crear Usuario</h3>
 
 <UsersForm @ref="usersForm" IsAdmin="IsAdmin.GetValueOrDefault()" userDTO="userDTO" OnValidSubmit="CreateAsync" ReturnAction="Return" />
 
@@ -38,23 +37,17 @@
         {
             userDTO.UserType = UserType.Client;
         }
-        var responseHttp = await Repository.PostAsync<UserDTO, TokenDTO>("/api/accounts/CreateUser", userDTO);
+        var responseHttp = await Repository.PostAsync<UserDTO>("/api/accounts/CreateUser", userDTO);
         if (responseHttp.Error)
         {
             var message = await responseHttp.GetErrorMessageAsync();
             await SweetAlertService.FireAsync("Error", message);
             return;
         }
-
+        await SweetAlertService.FireAsync("Confirmación"
+        , "Su cuenta ha sido creada con éxito. Se le ha enviado un correo electrónico al administrador para activar tu usuario."
+        , SweetAlertIcon.Info);
         Return();
-        var toast = SweetAlertService.Mixin(new SweetAlertOptions
-            {
-                Toast = true,
-                Position = SweetAlertPosition.BottomEnd,
-                ShowConfirmButton = true,
-                Timer = 3000
-            });
-        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
     }
 
     private void Return()

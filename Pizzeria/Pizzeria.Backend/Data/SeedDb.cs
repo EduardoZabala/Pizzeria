@@ -54,9 +54,6 @@ namespace Pizzeria.Backend.Data
                
                 if (user == null)
                 {
-
-
-
                     user = new User
                     {
                         Cedula = Cedula,
@@ -71,11 +68,12 @@ namespace Pizzeria.Backend.Data
                     await _usersRepository.AddUserAsync(user, "123456");
                     await _usersRepository.AddUserToRoleAsync(user, userType.ToString());
 
-                    //Future
-                    //var token = await _usersRepository.GenerateEmailConfirmationTokenAsync(user);
-                    //await _usersRepository.ConfirmEmailAsync(user, token);
+                   
+                    var token = await _usersRepository.GenerateEmailConfirmationTokenAsync(user);
+                    await _usersRepository.ConfirmEmailAsync(user, token);
 
                 }
+                return user;
             }
             catch (Exception ex)
             {
