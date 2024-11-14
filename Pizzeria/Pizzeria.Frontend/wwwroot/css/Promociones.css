@@ -1,0 +1,147 @@
+﻿/* Contenedor principal */
+.promociones-container {
+    background-color: #ffd32e;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+/* T�tulo de la secci�n */
+.promociones-titulo {
+    font-weight: bold;
+    font-size: 24px;
+    color: #FFFFFF;
+    padding-top: 20px;
+}
+
+/* Dise�o de cuadr�cula para las tarjetas */
+.promociones-grid {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    background-color: #FFF2E5;
+    padding: 20px;
+    height: 100%; /* Asegura que todas las tarjetas tengan la misma altura */
+}
+
+/* Tarjeta de cada promoci�n */
+.promocion-card {
+    background-color: #FFF6F0;
+    border-radius: 10px;
+    width: 200px;
+    display: grid;
+    padding: 15px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Imagen (marcador de posici�n) */
+.promocion-imagen {
+    height: 100px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 14px;
+}
+
+/* T�tulo de cada promoci�n */
+.promocion-card h3 {
+    font-weight: 550;
+    font-size: 16px;
+    color: #333;
+    margin: 10px 0;
+}
+
+/* Descripci�n de cada promoci�n */
+.promocion-card p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+/* Bot�n "Agregar al carrito" */
+.boton-agregar {
+    background-color: #FF5A5F;
+    color: #FFFFFF;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    margin-top: auto;
+}
+
+    .boton-agregar:hover {
+        background-color: #E04848;
+    }
+    
+/* Estilos generales para el botón */
+.btn-seleccionar-pizzas {
+    background-color: #FF5A5F;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+/* Contenedor del popup */
+.popup-container {
+    background-color: #FFEDE0;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.popup-titulo {
+    font-weight: bold;
+    font-size: 26px;
+    margin-bottom: 20px;
+    color: #1f0b0c;
+    padding-top: 20px;
+}
+
+/* Estilos de cada tarjeta en el popup */
+.popup-card {
+    background-color: #FFF6F0;
+    border-radius: 10px;
+    width: 200px;
+    padding: 15px;
+    display: grid;
+    text-align: center;
+    margin: 10px;
+}
+
+    .popup-card h3 {
+        font-size: 16px;
+        margin: 10px 0;
+    }
+
+    .popup-card button {
+        background-color: #FF5A5F;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
+
+/* Botón de "Regresar Promociones" */
+.popup-back-button {
+    background-color: #d32f2f;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    cursor: pointer;
+}

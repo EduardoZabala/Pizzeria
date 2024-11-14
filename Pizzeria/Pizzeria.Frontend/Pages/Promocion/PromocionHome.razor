@@ -1,0 +1,54 @@
+﻿@page "/Promociones"
+@inject IJSRuntime JS
+
+<div class="promociones-container">
+    <h2 class="promociones-titulo">Promociones Disponibles</h2>
+    <div class="promociones-grid">
+        <!-- Promoción 1 -->
+        <div class="promocion-card">
+            <div class="promocion-imagen"><img src="images/2 medianas.jpeg" class="promocion-imagen" /></div>
+            <h3>2x1 Pizzas Medianas</h3>
+            <p>Disfruta nuestra deliciosa promoción de 2 pizzas medianas, perfectas para compartir a un precio inigualable</p>
+            <button class="boton-agregar">Agregar al carrito</button>
+        </div>
+
+        <!-- Promoción 2 -->
+        <div class="promocion-card">
+            <div class="promocion-imagen"><img src="images/ranchera promocion.jpeg" class="promocion-imagen" /></div>
+            <h3>1 Pizza Ranchera + 2 coca cola 350ml + 15 palitos de queso</h3>
+            <p>Ven y disfruta con tu pareja de esta maravillosa promoción solo por este fin de semana</p>
+            <button class="boton-agregar">Agregar al carrito</button>
+        </div>
+
+        <!-- Promoción 3 -->
+        <div class="promocion-card">
+            <div class="promocion-imagen"><img src="images/combo almorzar.jpeg" class="promocion-imagen" /></div>
+            <h3>Combo para almorzar</h3>
+            <p>Ven y disfruta de esta pizza ranchera personal más una Pepsi y la puedes disfrutar en la hora de tu almuerzo</p>
+            <button class="boton-agregar">Agregar al carrito</button>
+        </div>
+
+        <!-- Promoción 4 -->
+        <div class="promocion-card">
+            <div class="promocion-imagen"><img src="images/reunion perfecta.jpeg" class="promocion-imagen" /></div>
+            <h3>La Reunión Perfecta</h3>
+            <p>¿Reunión con tus amigos? Disfruta de nuestra oferta especial: Cerveza bien fría y pizza deliciosa, la combinación perfecta para una gran noche.</p>
+            <button class="boton-agregar" @onclick="MostrarPopup">Seleccionar Pizzas</button>
+        </div>
+
+        <!-- Promoción 5 -->
+        <div class="promocion-card">
+            <div class="promocion-imagen"><img src="images/combazo nocturno.jpeg" class="promocion-imagen" /></div>
+            <h3>Combazo Nocturno</h3>
+            <p>Disfruta de nuestra oferta única en su clase: 1 pizza mexicana, 1 combo de pechuga y 2 cervezas; ¡Ideal para compartir!</p>
+            <button class="boton-agregar">Agregar al carrito</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private async Task MostrarPopup()
+    {
+        await JS.InvokeVoidAsync("mostrarPopup");
+    }
+}
