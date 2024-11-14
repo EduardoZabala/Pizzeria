@@ -34,8 +34,9 @@ namespace Pizzeria.Backend.Data
             await CheckAdministradoresAsync();
             await CheckTrabajadoresAsync();
             await CheckPromocionesAsync();
-            await CheckPedidosAsync();
+
             await CheckProductosAsync();
+            await CheckPedidosAsync();
             await CheckPagoEfectivosAsync();
             await CheckReseñasAsync();
         }
@@ -82,7 +83,6 @@ namespace Pizzeria.Backend.Data
                 // Puedes lanzar una excepción personalizada si lo deseas
                 throw new Exception("Error al verificar o crear el usuario.", ex);
             }
-            return user;
         }
         private async Task CheckAdministradoresAsync()
         {
@@ -130,10 +130,10 @@ namespace Pizzeria.Backend.Data
         {
             if (!_context.Pedidos.Any())
             {
-                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 20, 18, 30, 0), Direccion = "Calle 1 #10-20", CostoTotal = 25000, IdTrabajador = "100", IdPromocion = 1, CedulaUsuario = "600" });
-                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 21, 19, 0, 0), Direccion = "Calle 2 #20-30", CostoTotal = 30000, IdTrabajador =  "200", IdPromocion = 2, CedulaUsuario = "700" });
-                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 22, 20, 30, 0), Direccion = "Calle 3 #30-40", CostoTotal = 27000, IdTrabajador = "300", IdPromocion = 3, CedulaUsuario = "800" });
-                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 23, 21, 0, 0), Direccion = "Calle 4 #40-50", CostoTotal = 28000, IdTrabajador =  "400", IdPromocion = 4, CedulaUsuario = "500" });
+                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 20, 18, 30, 0), Direccion = "Calle 1 #10-20", CostoTotal = 25000, IdTrabajador = "100", IdPromocion = 1, CedulaUsuario = "600",Productos="1" });
+                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 21, 19, 0, 0), Direccion = "Calle 2 #20-30", CostoTotal = 30000, IdTrabajador =  "200", IdPromocion = 2, CedulaUsuario = "700",Productos="2" });
+                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 22, 20, 30, 0), Direccion = "Calle 3 #30-40", CostoTotal = 27000, IdTrabajador = "300", IdPromocion = 3, CedulaUsuario = "800",Productos="3" });
+                _context.Pedidos.Add(new Pedido { HoraEntrega = new DateTime(2023, 10, 23, 21, 0, 0), Direccion = "Calle 4 #40-50", CostoTotal = 28000, IdTrabajador =  "400", IdPromocion = 4, CedulaUsuario = "500",Productos="4" });
             }
 
             await _context.SaveChangesAsync();
@@ -143,10 +143,10 @@ namespace Pizzeria.Backend.Data
         {
             if (!_context.Productos.Any())
             {
-                _context.Productos.Add(new Producto { Nombre = "Pizza Pepperoni", Precio = 12000, Cantidad = 2, IdPedido = 1 });
-                _context.Productos.Add(new Producto { Nombre = "Pizza Hawaiana", Precio = 14000, Cantidad = 1, IdPedido = 2 });
-                _context.Productos.Add(new Producto { Nombre = "Pizza Margarita", Precio = 13000, Cantidad = 1, IdPedido = 3 });
-                _context.Productos.Add(new Producto { Nombre = "Pizza Cuatro Quesos", Precio = 15000, Cantidad = 2, IdPedido = 4 });
+                _context.Productos.Add(new Producto { Nombre = "Pizza Pepperoni", Precio = 12000, Cantidad = 2 });
+                _context.Productos.Add(new Producto { Nombre = "Pizza Hawaiana", Precio = 14000, Cantidad = 1, });
+                _context.Productos.Add(new Producto { Nombre = "Pizza Margarita", Precio = 13000, Cantidad = 1 });
+                _context.Productos.Add(new Producto { Nombre = "Pizza Cuatro Quesos", Precio = 15000, Cantidad = 2 });
             }
 
             await _context.SaveChangesAsync();

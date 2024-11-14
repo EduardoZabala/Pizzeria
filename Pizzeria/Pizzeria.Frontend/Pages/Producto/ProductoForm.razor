@@ -23,12 +23,6 @@
             <InputNumber class="form-control" @bind-Value="@Producto.Cantidad" />
             <ValidationMessage For="@(() => Producto.Cantidad)" />
         </div>
-
-        <label>Id de Pedido:</label>
-        <div>
-            <InputNumber class="form-control" @bind-Value="@Producto.IdPedido" />
-            <ValidationMessage For="@(() => Producto.IdPedido)" />
-        </div>
     </div>
 
     <button class="btn btn-primary" type="submit">Guardar Cambios</button>

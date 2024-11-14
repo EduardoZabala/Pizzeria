@@ -1,64 +1,89 @@
-﻿@using CurrieTechnologies.Razor.SweetAlert2;
-@using Microsoft.AspNetCore.Components.Forms;
-@using Microsoft.AspNetCore.Components;
-@using Pizzeria.Shared.Entities;
-@using Microsoft.AspNetCore.Components.Routing;
+﻿@page "/orders/create"
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IRepository Repository
 
 <NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
 
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     <DataAnnotationsValidator />
-    <div class="mb-3">
-        <label>Hora de Entrega:</label>
-        <div>
-            <InputDate class="form-control" @bind-Value="@Pedido.HoraEntrega" />
-            <ValidationMessage For="@(() => Pedido.HoraEntrega)" />
-        </div>
-        <label>Dirección:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@Pedido.Direccion" />
-            <ValidationMessage For="@(() => Pedido.Direccion)" />
-        </div>
-        <label>Costo Total:</label>
-        <div>
-            <InputNumber class="form-control" @bind-Value="@Pedido.CostoTotal" />
-            <ValidationMessage For="@(() => Pedido.CostoTotal)" />
-        </div>
-        <label>Id Trabajador:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@Pedido.IdTrabajador" />
-            <ValidationMessage For="@(() => Pedido.IdTrabajador)" />
-        </div>
-        <label>Id Promoción:</label>
-        <div>
-            <InputNumber class="form-control" @bind-Value="@Pedido.IdPromocion" />
-            <ValidationMessage For="@(() => Pedido.IdPromocion)" />
-        </div>
-        <label>Id Cliente:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@Pedido.CedulaUsuario" />
-            <ValidationMessage For="@(() => Pedido.CedulaUsuario)" />
-        </div>
+    <div class="pedidos-header">
+        <h1> Pedidos</h1>
     </div>
 
-    <button class="btn btn-primary" type="submit">Guardar Cambios</button>
-    <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+    <div class="pedidos-container">
+        <div class="content-wrapper">
+            <!-- Formulario a la izquierda -->
+            <div class="datos-form">
+                <h3>Ingresa los datos para el domicilio</h3>
+                <input type="text" class="form-input" placeholder="Direccion" @bind="Pedidos.Direccion" />
+                <input type="number" class="form-input" placeholder="Promocion" @bind="Pedidos.IdPromocion" />
+                <input type="number" class="form-input" placeholder="Cedula del Usuario" @bind="Pedidos.CedulaUsuario" readonly />
+                <input type="double" class="form-input" placeholder="Promocion" @bind="Pedidos.CostoTotal" readonly />
+                @* <input type="number" class="form-input" placeholder="Cedula del Trabajador" @bind="Pedidos.IdTrabajador" /> *@
+            </div>
+            <div class="productos-container">
+                <div class="productos-grid">
+                    <div class="producto-card">
+                        <label>Producto:</label>
+                        <InputSelect class="form-control" @bind-Value="@selectedProducto">
+                            <option value="" disabled>Seleccione el producto</option>
+                            @foreach (var pro in Productos)
+                            {
+                                <option value="@pro.Id">@pro.Nombre</option>
+                            }
+                        </InputSelect>
+                        <button class="btn btn-primary" @onclick="() => AgregarProductoAsync(selectedProducto)">Agregar Producto</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons-container">
+            <button class="button" @onclick="VolverAlMenu">Volver al Menu</button>
+            <button class="button" @onclick="CancelarPedido">Cancelar Pedido</button>
+            <button class="button" @onclick="ConfirmarPedidoAsync">Confirmar pedido</button>
+            @*TODO:Falta que confirma me redirija al de pagos*@
+        </div>
+    </div>
 </EditForm>
-
 @code {
+
+    [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+
+    public bool FormPostedSuccessfully { get; set; } = false;
+    private List<int> ProductosSeleccionados = new List<int>();
+    private int selectedProducto { get; set; }
+    [EditorRequired] public Pedido Pedidos { get; set; } = new Pedido();
+
     private EditContext editContext = null!;
+    private List<Producto> Productos = new List<Producto>();
 
-    protected override void OnInitialized()
-    {
-        editContext = new(Pedido);
-    }
-
-    [EditorRequired, Parameter] public Pedido Pedido { get; set; } = null!;
     [EditorRequired, Parameter] public EventCallback OnValidSubmit { get; set; }
     [EditorRequired, Parameter] public EventCallback ReturnAction { get; set; }
-    [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-    public bool FormPostedSuccessfully { get; set; } = false;
 
+    protected async override Task OnInitializedAsync()
+    {
+        editContext = new(Pedidos);
+        if (await IsAuthenticatedAsync())
+        {
+            await charging();
+
+        }
+        else
+        {
+            var toast = SweetAlertService.Mixin(new SweetAlertOptions
+                {
+                    Toast = true,
+                    Position = SweetAlertPosition.Center,
+                    ShowConfirmButton = true,
+                    Timer = 3000
+                });
+            await toast.FireAsync(icon: SweetAlertIcon.Error, message: "No se puede continuar con el pedido, no te encuentras registrado.");
+            VolverLogin();
+        }
+    }
     private async Task OnBeforeInternalNavigation(LocationChangingContext context)
     {
         var formWasEdited = editContext.IsModified();
@@ -84,4 +109,104 @@
 
         context.PreventNavigation();
     }
+    private async Task charging()
+    {
+
+        var responseHttp = await Repository.GetAsync<List<Producto>>("/api/Producto");
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message);
+            VolverLogin();
+            return;
+        }
+        Productos = responseHttp.Response!;
+    }
+    private async Task<bool> IsAuthenticatedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        bool isAuthenticated = user.Identity?.IsAuthenticated ?? false;
+        string cedula = user.Claims.FirstOrDefault(c => c.Type == "Cedula")?.Value ?? "0";
+        Pedidos.CedulaUsuario = cedula;
+        
+        return isAuthenticated;
+    }
+    private async Task CreateAsync()
+    {
+
+        var responseHttp = await Repository.PostAsync("/api/Pedido", Pedidos);
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message);
+            return;
+        }
+
+        Return();
+        var toast = SweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.Center,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
+
+    }
+    private async void AgregarProductoAsync(int productoId)
+    {
+        var toast = SweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.Center,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        if (!ProductosSeleccionados.Contains(productoId) && productoId != 0)
+        {
+            ProductosSeleccionados.Add(productoId);
+            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Producto registrado con éxito.");
+            AddProductsAsync(productoId);
+            return;
+        }
+        await toast.FireAsync(icon: SweetAlertIcon.Warning, message: "Producto ya esta registrado.");
+    }
+    private async void ConfirmarPedidoAsync()
+    {
+        await CreateAsync();
+    }
+    private async void AddProductsAsync(int producto)
+    {
+        Pedidos.Productos += producto.ToString() + ",";
+
+        var responseHttp = await Repository.GetAsync<double>("/api/Producto/ConsultarPrecio?id=" + producto);
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message);
+            return;
+        }
+        Pedidos.CostoTotal += responseHttp.Response!;
+    }
+
+   
+    private void Return()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+    private void VolverLogin()
+    {
+        NavigationManager.NavigateTo("/Login");
+    }
+    private void VolverAlMenu()//TODO:Aqui va la referencia del menu
+    {
+        NavigationManager.NavigateTo("/");
+    }
+    private void CancelarPedido()
+    {
+        NavigationManager.NavigateTo("/orders/create");
+    }
+
 }

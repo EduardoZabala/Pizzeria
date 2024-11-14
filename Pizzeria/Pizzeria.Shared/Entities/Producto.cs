@@ -27,13 +27,5 @@ namespace Pizzeria.Shared.Entities
         [Display(Name = "Cantidad del producto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public int Cantidad { get; set; }
-
-        [ForeignKey("Pedido")]
-        public int IdPedido { get; set; }
-
-        [JsonIgnore]
-        public Pedido ?Pedido { get; set; }
-
-
     }
 }

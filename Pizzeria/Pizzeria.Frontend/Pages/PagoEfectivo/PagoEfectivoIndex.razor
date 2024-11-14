@@ -24,7 +24,6 @@
                 @foreach (var pago in PagosEfectivos!)
                 {
                     <tr>
-                        <td>@pago.FechaPago.ToString("g")</td>
                         <td>@(pago.Estado ? "Completado" : "Pendiente")</td>
                         <td>@pago.IdPedido</td>
                         <td>

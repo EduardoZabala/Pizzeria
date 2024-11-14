@@ -67,5 +67,14 @@ namespace Pizzeria.Backend.Controllers
             await _context.SaveChangesAsync();
             return Ok(producto);
         }
+        [HttpGet]
+        [Route("ConsultarPrecio")]
+        public async Task<double> GetPrice(int id)
+        {
+            return await _context.Productos
+                         .Where(p => p.Id == id)
+                         .Select(p => p.Precio)
+                         .FirstOrDefaultAsync();
+        }
     }
 }

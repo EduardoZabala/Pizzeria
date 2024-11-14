@@ -17,7 +17,6 @@
                     <th>Nombre</th>
                     <th>Precio</th>
                     <th>Cantidad</th>
-                    <th>Id de Pedido</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -28,7 +27,6 @@
                         <td>@producto.Nombre</td>
                         <td>@producto.Precio.ToString("C")</td>
                         <td>@producto.Cantidad</td>
-                        <td>@producto.IdPedido</td>
                         <td>
                             <a href="/products/edit/@producto.Id" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger" @onclick=@(() => DeleteAsync(producto))>Borrar</button>

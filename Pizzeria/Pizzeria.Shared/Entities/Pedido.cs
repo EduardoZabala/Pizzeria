@@ -16,21 +16,19 @@ namespace Pizzeria.Shared.Entities
         public int Id { get; set; }
 
         [Display(Name = "Hora Estimada de Entrega")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public DateTime HoraEntrega { get; set; }
+        public DateTime ?HoraEntrega { get; set; }
         
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public string? Direccion { get; set; }
 
+        public string Productos { get; set; }
         public double CostoTotal { get; set; }
 
         [ForeignKey("Trabajador")]
-        public string IdTrabajador { get; set; }
+        public string ?IdTrabajador { get; set; }
 
         [ForeignKey("Promocion")]
-        public int IdPromocion { get; set; }
-
-        
+        public int ?IdPromocion { get; set; }
         public string ?CedulaUsuario { get; set; }
 
         [JsonIgnore]
@@ -41,11 +39,11 @@ namespace Pizzeria.Shared.Entities
 
         [JsonIgnore]
         public Promocion ?Promocion { get; set; }
+
     
         [JsonIgnore]
         public ICollection<PagoEfectivo> ?PagoEfectivos { get; set; }
-        [JsonIgnore]
-        public ICollection<Producto> ?Productos { get; set; }
+        
     }
 
 

@@ -15,9 +15,8 @@ namespace Pizzeria.Shared.Entities
         public int Id { get; set; }
         
         [Display(Name = "Fecha de Pago")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-
-        public DateTime FechaPago { get; set; }
+ 
+        public DateTime ?FechaPago { get; set; }
 
         [Display(Name = "Estado del Pago")]
         [Required(ErrorMessage = "El campo {0} es requerido")]

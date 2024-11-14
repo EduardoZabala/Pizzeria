@@ -1,0 +1,53 @@
+.productos-section {
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.productos-section h2 {
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.producto-inputs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+}
+
+    .campo label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+.form-control {
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #d32f2f;
+    color: white;
+}
+
+.acciones-producto {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
