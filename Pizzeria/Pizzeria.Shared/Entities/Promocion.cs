@@ -24,6 +24,10 @@ namespace Pizzeria.Shared.Entities
         public DateTime FechaInicio { get; set; }
 
 
+        [Display(Name = "Foto")]
+        public string? Foto { get; set; }
+
+
         [Display(Name = "Fecha de fin de la promocion")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public DateTime FechaFin { get; set; }

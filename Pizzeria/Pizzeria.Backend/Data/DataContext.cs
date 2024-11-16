@@ -18,6 +18,7 @@ namespace Pizzeria.Backend.Data
         public DbSet<Reseña> Reseñas { get; set; }
         public DbSet<Trabajador> Trabajadores { get; set; }
         public DbSet<Administrador> Administradores { get; set; }
+        public DbSet<Archivo> Archivos { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -25,6 +26,8 @@ namespace Pizzeria.Backend.Data
             modelBuilder.Entity<Trabajador>().HasOne(t => t.Users).WithMany().HasForeignKey(t => t.Cedula).HasPrincipalKey(u => u.Cedula);
             modelBuilder.Entity<Reseña>().HasOne(t => t.Users).WithMany().HasForeignKey(t => t.CedulaUsuario).HasPrincipalKey(u => u.Cedula);
             modelBuilder.Entity<Pedido>().HasOne(t => t.Users).WithMany().HasForeignKey(t => t.CedulaUsuario).HasPrincipalKey(u => u.Cedula);
+            modelBuilder.Entity<Archivo>().Property(f => f.Content).HasColumnType("VARBINARY(MAX)");
+
         } 
     }
     

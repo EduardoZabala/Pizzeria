@@ -2,6 +2,7 @@
 using Pizzeria.Backend.Data;
 using Pizzeria.Shared.Enums;
 using Pizzeria.Backend.Repositories.Interfaces;
+using Pizzeria.Backend.Helpers;
 
 namespace Pizzeria.Backend.Data
 {
@@ -9,11 +10,13 @@ namespace Pizzeria.Backend.Data
     {
         private readonly DataContext _context;
         private readonly IUsersRepository _usersRepository;
+        private readonly IFileStorage _fileStorage;
 
-        public SeedDb(DataContext context, IUsersRepository usersRepository)
+        public SeedDb(DataContext context, IUsersRepository usersRepository,IFileStorage fileStorage)
         {
             _context = context;
             _usersRepository = usersRepository;
+            _fileStorage = fileStorage;
         }
 
         public async Task SeedAsync()
@@ -114,11 +117,11 @@ namespace Pizzeria.Backend.Data
         {
             if (!_context.Promociones.Any())
             {
-                _context.Promociones.Add(new Promocion { Descripcion = "Descuento 10%", FechaInicio = new DateTime(2023, 2, 1), FechaFin = new DateTime(2023, 2, 28), VlrDescuento = 10, Estado = true });
-                _context.Promociones.Add(new Promocion { Descripcion = "Descuento 20%", FechaInicio = new DateTime(2023, 3, 1), FechaFin = new DateTime(2023, 3, 31), VlrDescuento = 20, Estado = true });
-                _context.Promociones.Add(new Promocion { Descripcion = "Descuento 15%", FechaInicio = new DateTime(2023, 4, 1), FechaFin = new DateTime(2023, 4, 30), VlrDescuento = 15, Estado = false });
-                _context.Promociones.Add(new Promocion { Descripcion = "Descuento 25%", FechaInicio = new DateTime(2023, 5, 1), FechaFin = new DateTime(2023, 5, 31), VlrDescuento = 25, Estado = true });
-                _context.Promociones.Add(new Promocion { Descripcion = "Descuento 30%", FechaInicio = new DateTime(2023, 6, 1), FechaFin = new DateTime(2023, 6, 30), VlrDescuento = 30, Estado = true });
+                _context.Promociones.Add(new Promocion { Descripcion = "Descuento 10%",FechaInicio = new DateTime(2023, 2, 1), FechaFin = new DateTime(2023, 2, 28), VlrDescuento = 10,Foto="",Estado = true });
+                _context.Promociones.Add(new Promocion { Descripcion = "Descuento 20%",FechaInicio = new DateTime(2023, 3, 1), FechaFin = new DateTime(2023, 3, 31), VlrDescuento = 20,Foto="" ,Estado = true });
+                _context.Promociones.Add(new Promocion { Descripcion = "Descuento 15%",FechaInicio = new DateTime(2023, 4, 1), FechaFin = new DateTime(2023, 4, 30), VlrDescuento = 15,Foto="" ,Estado = false });
+                _context.Promociones.Add(new Promocion { Descripcion = "Descuento 25%",FechaInicio = new DateTime(2023, 5, 1), FechaFin = new DateTime(2023, 5, 31), VlrDescuento = 25,Foto="" ,Estado = true });
+                _context.Promociones.Add(new Promocion { Descripcion = "Descuento 30%",FechaInicio = new DateTime(2023, 6, 1), FechaFin = new DateTime(2023, 6, 30), VlrDescuento = 30,Foto="" ,Estado = true });
             }
 
             await _context.SaveChangesAsync();
@@ -138,7 +141,7 @@ namespace Pizzeria.Backend.Data
 
             await _context.SaveChangesAsync();
         }
-
+       
         private async Task CheckProductosAsync()
         {
             if (!_context.Productos.Any())

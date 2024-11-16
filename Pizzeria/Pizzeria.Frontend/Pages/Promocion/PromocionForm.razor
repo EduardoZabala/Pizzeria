@@ -34,6 +34,10 @@
             <InputCheckbox class="form-check-input" @bind-Value="@Promocion.Estado" />
             <ValidationMessage For="@(() => Promocion.Estado)" />
         </div>
+        <div class="mb-3">
+            <InputImg Label="Foto" ImageSelected="ImageSelected" ImageURL="@imageUrl" />
+        </div>
+
     </div>
 
     <button class="btn btn-primary" type="submit">Guardar Cambios</button>
@@ -42,10 +46,15 @@
 
 @code {
     private EditContext editContext = null!;
-
+    private string? imageUrl;
     protected override void OnInitialized()
     {
         editContext = new(Promocion);
+    }
+    private void ImageSelected(string imagenBase64)
+    {
+        Promocion.Foto = imagenBase64;
+        imageUrl = null;
     }
 
     [EditorRequired, Parameter] public Promocion Promocion { get; set; } = null!;

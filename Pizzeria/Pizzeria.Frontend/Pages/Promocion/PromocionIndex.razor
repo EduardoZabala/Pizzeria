@@ -19,6 +19,7 @@
                     <th>Fecha Fin</th>
                     <th>Valor Descuento</th>
                     <th>Estado</th>
+                    <th>Foto</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,6 +42,10 @@
                             @(promocion.Estado ? "Activo" : "Inactivo")
                         </td>
                         <td>
+                            <img src="@($"data:image/jpg;base64,{Getphoto(promocion.Foto)}")" width="50" height="50" style="border-radius:50%" />
+
+                        </td>
+                        <td>
                             <a href="/promotions/edit/@promocion.Id" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger" @onclick=@(() => DeleteAsync(promocion))>Borrar</button>
                         </td>
@@ -51,6 +56,7 @@
     </Body>
 </GenericList>
 
+
 @code {
     public List<Promocion> Promociones { get; set; }
 
@@ -58,6 +64,7 @@
     {
         await LoadAsync();
     }
+    public List<Archivo> Archivos{ get; set; }
 
     private async Task LoadAsync()
     {
@@ -70,6 +77,25 @@
             return;
         }
         Promociones = responseHttp.Response!;
+        var responseHttp2 = await Repository.GetAsync<List<Archivo>>("api/Archivos");
+        if (responseHttp2.Error)
+        {
+            var message = await responseHttp2.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        Archivos = responseHttp2.Response!;
+
+    }
+
+    private string Getphoto(string imageName)
+    {
+        Archivo fotoPromocion =  Archivos.Find(A => A.FileName == imageName);
+        if (fotoPromocion == null)
+        {
+            return "";
+        }
+        return Convert.ToBase64String(fotoPromocion.Content);
     }
 
     private async Task DeleteAsync(Promocion promocion)

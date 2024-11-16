@@ -20,7 +20,6 @@
                 <input type="number" class="form-input" placeholder="Promocion" @bind="Pedidos.IdPromocion" />
                 <input type="number" class="form-input" placeholder="Cedula del Usuario" @bind="Pedidos.CedulaUsuario" readonly />
                 <input type="double" class="form-input" placeholder="Promocion" @bind="Pedidos.CostoTotal" readonly />
-                @* <input type="number" class="form-input" placeholder="Cedula del Trabajador" @bind="Pedidos.IdTrabajador" /> *@
             </div>
             <div class="productos-container">
                 <div class="productos-grid">
@@ -130,21 +129,19 @@
         bool isAuthenticated = user.Identity?.IsAuthenticated ?? false;
         string cedula = user.Claims.FirstOrDefault(c => c.Type == "Cedula")?.Value ?? "0";
         Pedidos.CedulaUsuario = cedula;
-        
+
         return isAuthenticated;
     }
     private async Task CreateAsync()
     {
 
-        var responseHttp = await Repository.PostAsync("/api/Pedido", Pedidos);
+        var responseHttp = await Repository.PostAsync<Pedido,Pedido>("/api/Pedido", Pedidos);
         if (responseHttp.Error)
         {
             var message = await responseHttp.GetErrorMessageAsync();
             await SweetAlertService.FireAsync("Error", message);
             return;
-        }
-
-        Return();
+        } 
         var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -153,7 +150,8 @@
                 Timer = 3000
             });
         await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro creado con éxito.");
-
+        FormPostedSuccessfully = true;
+        GoPayments(responseHttp.Response.Id!);
     }
     private async void AgregarProductoAsync(int productoId)
     {
@@ -192,9 +190,9 @@
     }
 
    
-    private void Return()
+    private void GoPayments(int pedidoId)
     {
-        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/cash-payments/create="+pedidoId);
     }
     private void VolverLogin()
     {

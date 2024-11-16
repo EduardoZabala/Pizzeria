@@ -14,6 +14,8 @@ namespace Pizzeria.Frontend.Repositories
         public Repository(HttpClient httpClient)
         {
             _httpClient = httpClient;
+            _httpClient.Timeout = TimeSpan.FromSeconds(10); // Timeout después de 10 segundos
+
         }
 
         public async Task<HttpResponseWrapper<T>> GetAsync<T>(string url)

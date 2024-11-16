@@ -24,7 +24,7 @@ builder.Services.AddTransient<SeedDb>();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:8000//") });
 builder.Services.AddScoped<IMailHelper, MailHelper>();
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
-
+builder.Services.AddScoped<IFileStorage, FileStorage>();
 
 
 builder.Services.AddIdentity<User, IdentityRole>(x =>

@@ -1,5 +1,5 @@
 ﻿// popup.js
-
+//TODO:Generar de acuerdo a los productos las imagenes
 function mostrarPopup() {
     Swal.fire({
         title: '<div class="popup-titulo">Selecciona pizza para La Reunión Perfecta</div>',

@@ -2,15 +2,17 @@
 @using Microsoft.AspNetCore.Components;
 @using Pizzeria.Frontend.Repositories;
 @using Pizzeria.Shared.Entities;
-@page "/cash-payments/create"
+@page "/cash-payments/create={orderId:int}"
 
 <h3>Crear Pago Efectivo</h3>
 
 <PagoEfectivoForm @ref="pagoEfectivoForm" PagoEfectivo="pagoEfectivo" OnValidSubmit="CreateAsync" ReturnAction="Return" />
 
 @code {
+    [Parameter]
+    public int orderId { get; set; }
     private PagoEfectivoForm? pagoEfectivoForm;
-
+    
     [Inject] private IRepository Repository { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;

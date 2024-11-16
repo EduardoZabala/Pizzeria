@@ -19,6 +19,9 @@ namespace Pizzeria.Shared.Entities
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public string Nombre { get; set; }
 
+        [Display(Name = "Foto")]
+        public string? Foto { get; set; }
+
         [Display(Name = "Precio del producto")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
 
