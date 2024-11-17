@@ -76,7 +76,7 @@ namespace Pizzeria.Backend.Controllers
             if (!string.IsNullOrEmpty(promocion.Foto))
             {
                 var fotoPromocion = Convert.FromBase64String(promocion.Foto);
-                promocion.Foto = await _fileStorage.SaveFileAsync(fotoPromocion, ".jpg");
+                promocion.Foto = await _fileStorage.SaveFileAsync(fotoPromocion, ".jpg");//Toca modificarlo
             }
             _context.Update(promocion);
             await _context.SaveChangesAsync();

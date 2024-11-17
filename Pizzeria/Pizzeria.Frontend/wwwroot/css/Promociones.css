@@ -1,28 +1,32 @@
 ﻿/* Contenedor principal */
 .promociones-container {
-    background-color: #ffd32e;
     text-align: center;
     font-family: Arial, sans-serif;
 }
-
+.centrar{
+    display:flex;
+    justify-content:center;
+}
 /* T�tulo de la secci�n */
 .promociones-titulo {
+    background-color: #ffd32e;
     font-weight: bold;
     font-size: 24px;
     color: #FFFFFF;
-    padding-top: 20px;
+    padding: 2.3rem;
 }
 
 /* Dise�o de cuadr�cula para las tarjetas */
 .promociones-grid {
+    width: 900px;
     margin-top: 20px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
+    gap: 4rem;
     background-color: #FFF2E5;
     padding: 20px;
-    height: 100%; /* Asegura que todas las tarjetas tengan la misma altura */
+    height: 100%;
 }
 
 /* Tarjeta de cada promoci�n */

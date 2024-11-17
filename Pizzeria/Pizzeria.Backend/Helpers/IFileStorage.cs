@@ -6,6 +6,7 @@
 
         Task RemoveFileAsync(string path);
 
+        Task<byte[]> ProccessFile(string path);
     }
 
 }

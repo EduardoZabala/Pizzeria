@@ -13,26 +13,16 @@ namespace Pizzeria.Shared.Entities
         [Key]
         public int Id { get; set; }
 
+        [Display(Name = "Nombre de la promocion")]
+        [Required(ErrorMessage = "El campo {0} es requerido")]
+        public string nombre { get; set; }
 
         [Display(Name = "Descripcion de la promocion")]
         [Required(ErrorMessage = "El campo {0} es requerido")]
         public string Descripcion { get; set; }
 
-        [Display(Name = "Fecha de Inicio de la promocion")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-
-        public DateTime FechaInicio { get; set; }
-
-
         [Display(Name = "Foto")]
         public string? Foto { get; set; }
-
-
-        [Display(Name = "Fecha de fin de la promocion")]
-        [Required(ErrorMessage = "El campo {0} es requerido")]
-        public DateTime FechaFin { get; set; }
-
-
 
         [Display(Name = "Valor del descuento")]
         [Required(ErrorMessage = "El campo {0} es requerido")]

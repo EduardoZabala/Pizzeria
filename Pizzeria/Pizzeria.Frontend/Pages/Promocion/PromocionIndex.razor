@@ -14,9 +14,8 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>Nombre</th>
                     <th>Descripción</th>
-                    <th>Fecha Inicio</th>
-                    <th>Fecha Fin</th>
                     <th>Valor Descuento</th>
                     <th>Estado</th>
                     <th>Foto</th>
@@ -27,18 +26,17 @@
                 {
                     <tr>
                         <td>
+                            @promocion.nombre
+                        </td>
+                        <td>
+
                             @promocion.Descripcion
-                        </td>
-                        <td>
-                            @promocion.FechaInicio.ToShortDateString()
-                        </td>
-                        <td>
-                            @promocion.FechaFin.ToShortDateString()
-                        </td>
+                         </td>
                         <td>
                             @promocion.VlrDescuento
                         </td>
                         <td>
+                            @*TODO:Esto debe ser un select*@
                             @(promocion.Estado ? "Activo" : "Inactivo")
                         </td>
                         <td>

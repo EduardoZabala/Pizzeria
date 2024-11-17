@@ -14,22 +14,19 @@
             <InputText class="form-control" @bind-Value="@Promocion.Descripcion" />
             <ValidationMessage For="@(() => Promocion.Descripcion)" />
         </div>
-        <label>Fecha Inicio:</label>
+        <label>Nombre:</label>
         <div>
-            <InputDate class="form-control" @bind-Value="@Promocion.FechaInicio" />
-            <ValidationMessage For="@(() => Promocion.FechaInicio)" />
+            <InputText class="form-control" @bind-Value="@Promocion.nombre" />
+            <ValidationMessage For="@(() => Promocion.nombre)" />
         </div>
-        <label>Fecha Fin:</label>
-        <div>
-            <InputDate class="form-control" @bind-Value="@Promocion.FechaFin" />
-            <ValidationMessage For="@(() => Promocion.FechaFin)" />
-        </div>
+       
         <label>Valor Descuento:</label>
         <div>
             <InputNumber class="form-control" @bind-Value="@Promocion.VlrDescuento" />
             <ValidationMessage For="@(() => Promocion.VlrDescuento)" />
         </div>
         <label>¿Está activa la promoción?:</label>
+        @*TODO:Revisar por que se sale del form*@
         <div>
             <InputCheckbox class="form-check-input" @bind-Value="@Promocion.Estado" />
             <ValidationMessage For="@(() => Promocion.Estado)" />

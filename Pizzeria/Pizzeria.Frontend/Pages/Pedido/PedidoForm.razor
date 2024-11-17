@@ -1,4 +1,5 @@
-﻿@page "/orders/create"
+﻿@page "/orders/create/"
+@page "/orders/create/discount/{promocionId:int?}"
 @using System.Security.Claims
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IRepository Repository
@@ -50,7 +51,7 @@
 
     [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
-
+    [Parameter] public int ?promocionId { get; set; }
     public bool FormPostedSuccessfully { get; set; } = false;
     private List<int> ProductosSeleccionados = new List<int>();
     private int selectedProducto { get; set; }
@@ -58,7 +59,7 @@
 
     private EditContext editContext = null!;
     private List<Producto> Productos = new List<Producto>();
-
+    
     [EditorRequired, Parameter] public EventCallback OnValidSubmit { get; set; }
     [EditorRequired, Parameter] public EventCallback ReturnAction { get; set; }
 

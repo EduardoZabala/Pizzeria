@@ -117,11 +117,16 @@ namespace Pizzeria.Backend.Data
         {
             if (!_context.Promociones.Any())
             {
-                _context.Promociones.Add(new Promocion { Descripcion = "Descuento 10%",FechaInicio = new DateTime(2023, 2, 1), FechaFin = new DateTime(2023, 2, 28), VlrDescuento = 10,Foto="",Estado = true });
-                _context.Promociones.Add(new Promocion { Descripcion = "Descuento 20%",FechaInicio = new DateTime(2023, 3, 1), FechaFin = new DateTime(2023, 3, 31), VlrDescuento = 20,Foto="" ,Estado = true });
-                _context.Promociones.Add(new Promocion { Descripcion = "Descuento 15%",FechaInicio = new DateTime(2023, 4, 1), FechaFin = new DateTime(2023, 4, 30), VlrDescuento = 15,Foto="" ,Estado = false });
-                _context.Promociones.Add(new Promocion { Descripcion = "Descuento 25%",FechaInicio = new DateTime(2023, 5, 1), FechaFin = new DateTime(2023, 5, 31), VlrDescuento = 25,Foto="" ,Estado = true });
-                _context.Promociones.Add(new Promocion { Descripcion = "Descuento 30%",FechaInicio = new DateTime(2023, 6, 1), FechaFin = new DateTime(2023, 6, 30), VlrDescuento = 30,Foto="" ,Estado = true });
+                var image1 =await _fileStorage.ProccessFile("images\\promotion_1.jpeg");
+                var image2 =await _fileStorage.ProccessFile("images\\promotion_2.jpeg");
+                var image3 =await _fileStorage.ProccessFile("images\\promotion_3.jpeg");
+                var image4 =await _fileStorage.ProccessFile("images\\promotion_4.jpeg");
+                var image5 =await _fileStorage.ProccessFile("images\\promotion_5.jpeg");
+                _context.Promociones.Add(new Promocion { Descripcion = "Disfruta nuestra deliciosa promoción de 2 pizzas medianas, perfectas para compartir a un precio inigualable", nombre= "2x1 Pizzas Medianas", VlrDescuento = 10,Foto=await _fileStorage.SaveFileAsync(image1,"jpg"), Estado = true });
+                _context.Promociones.Add(new Promocion { Descripcion = "Ven y disfruta con tu pareja de esta maravillosa promoción solo por este fin de semana ", nombre= "1 Pizza Ranchera + 2 Coca Cola 350ml + 15 palitos de queso", VlrDescuento = 20,Foto=await _fileStorage.SaveFileAsync(image2,"jpg") ,Estado = true });
+                _context.Promociones.Add(new Promocion { Descripcion = "Ven y disfruta de esta pizza ranchera personal más una Pepsi y la puedas disfrutar en la hora de tu almuerzo ", nombre= "Combo para almorzar ", VlrDescuento = 15,Foto=await _fileStorage.SaveFileAsync(image3,"jpg") ,Estado = false });
+                _context.Promociones.Add(new Promocion { Descripcion = "¿Reunión con tus amigos? Disfruta de nuestra oferta especial: Cerveza bien frías y pizza deliciosa, la combinación perfecta para una gran noche. ", nombre= "La reunión Perfecta", VlrDescuento = 25,Foto=await _fileStorage.SaveFileAsync(image4,"jpg") ,Estado = true });
+                _context.Promociones.Add(new Promocion { Descripcion = "Disfruta de nuestra oferta única en su clase : 1 pizza mexicana, 1 combo de pechuga y 2 cervezas. ¡Ideal para compartir!", nombre= "Combazo Nocturno", VlrDescuento = 30,Foto=await _fileStorage.SaveFileAsync(image5,"jpg") ,Estado = true });
             }
 
             await _context.SaveChangesAsync();
