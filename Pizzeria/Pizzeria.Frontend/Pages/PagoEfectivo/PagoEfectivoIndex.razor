@@ -5,10 +5,6 @@
 
 <h3>Pagos Efectivos</h3>
 
-<div class="mb-3">
-    <a class="btn btn-primary" href="/cash-payments/create">Nuevo Pago Efectivo</a>
-</div>
-
 <GenericList MyList="PagosEfectivos">
     <Body>
         <table class="table table-striped">
@@ -24,6 +20,7 @@
                 @foreach (var pago in PagosEfectivos!)
                 {
                     <tr>
+                        <td>@pago.FechaPago</td>
                         <td>@(pago.Estado ? "Completado" : "Pendiente")</td>
                         <td>@pago.IdPedido</td>
                         <td>

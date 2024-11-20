@@ -1,53 +1,97 @@
-.productos-section {
-    background-color: #4CAF50;
-    color: white;
+.pagos-contenedor {
+    max-width: 600px;
+    margin: 20px auto;
     padding: 20px;
-    border-radius: 8px;
+    background-color: #007f00;
+    border: 5px solid #007f00;
+    border-radius: 10px;
+}
+.pagos-seccion {
     margin-bottom: 20px;
+    background-color: #007f00;
+    padding: 15px;
+    border-radius: 8px;
+    color: white;
+}
+.pagos-titulo {
+    font-size: 18px;
+    margin-bottom: 10px;
 }
 
-.productos-section h2 {
-    font-size: 24px;
+.pagos-icono {
+    margin-left: 8px;
+}
+
+.pagos-cuadro {
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.pagos-fila {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    justify-content: space-between;
+    margin-bottom: 10px;
 }
 
-.producto-inputs {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-top: 10px;
+.pagos-campo {
+    flex: 1;
+    margin-right: 10px;
 }
 
-.campo {
-    display: flex;
-    flex-direction: column;
-}
+    .pagos-campo:last-child {
+        margin-right: 0;
+    }
 
-    .campo label {
-        font-weight: bold;
+    .pagos-campo label {
+        display: block;
+        font-size: 14px;
+        color: #b20000;
         margin-bottom: 5px;
     }
 
-.form-control {
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    background-color: #d32f2f;
-    color: white;
+    .pagos-campo input,
+    .pagos-campo select {
+        width: 100%;
+        padding: 5px;
+        border: 2px solid #b20000;
+        border-radius: 5px;
+        background-color: #b31010;
+    }
+
+.pagos-acciones {
+    text-align: right;
+    margin-top: 10px;
 }
 
-.acciones-producto {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.btn {
-    padding: 10px 20px;
+.pagos-boton {
+    padding: 5px 15px;
     border: none;
     border-radius: 5px;
-    font-weight: bold;
+    font-size: 14px;
     cursor: pointer;
+}
+
+    .pagos-boton.agregar {
+        background-color: #007f00;
+        color: white;
+    }
+
+    .pagos-boton.eliminar {
+        background-color: #b20000;
+        color: white;
+        margin-left: 10px;
+    }
+
+    .pagos-boton.pagar {
+        width: 10rem;
+        background-color: #b20000;
+        color: white;
+    }
+
+.pagos-boton-contenedor {
+    display: flex;
+    flex-direction: row-reverse;
+    text-align: center;
+    margin-top: 20px;
 }
