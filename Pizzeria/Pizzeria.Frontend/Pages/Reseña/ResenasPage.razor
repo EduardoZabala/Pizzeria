@@ -1,0 +1,121 @@
+﻿@page "/ResenasPage"
+@using Pizzeria.Backend.DTOs
+@using Pizzeria.Frontend.Services
+@using Pizzeria.Shared.Entities
+@inject NavigationManager Navigation
+@inject IReseñaService ReseñaService
+<div class="container">
+    <main>
+        <section class="reviews">
+            <h2>Reseñas de Clientes</h2>
+            <!-- Contenedor del filtro -->
+            <div class="filter-container">
+                <button class="filter-button" @onclick="MostrarFiltro">
+                    <i class="fas fa-filter"></i> FILTRAR
+                </button>
+                @if (mostrarFiltro)
+                {
+                    <div class="filter-options">
+                        <label for="calificacion">Calificación:</label>
+                        <select id="calificacion" @bind="filtroCalificacion">
+                            <option value="0">Seleccionar...</option>
+                            <option value="asc">De menor a mayor</option>
+                            <option value="desc">De mayor a menor</option>
+                        </select>
+                        <label for="fecha">Fecha:</label>
+                        <select id="fecha" @bind="filtroFecha">
+                            <option value="0">Seleccionar...</option>
+                            <option value="asc">Más antiguas</option>
+                            <option value="desc">Más recientes</option>
+                        </select>
+                        <label for="alfabetico">Alfabético:</label>
+                        <select id="alfabetico" @bind="filtroAlfabetico">
+                            <option value="0">Seleccionar...</option>
+                            <option value="asc">Ascendente</option>
+                            <option value="desc">Descendente</option>
+                        </select>
+                        <button class="apply-filters" @onclick="AplicarFiltros">Aplicar Filtros</button>
+                    </div>
+                }
+            </div>
+            <!-- Lista de reseñas -->
+            @if (reseñas != null && reseñas.Count > 0)
+            {
+                @foreach (var review in reseñas)
+                {
+                    <div class="review">
+                        <h3>@review.NombreCliente @review.ApellidoCliente</h3>
+                        <p class="star-rating">@GetStars(review.Calificacion)</p>
+                        <p>@review.Comentario</p>
+                        <p class="review-date">@review.FechaPublicacion.ToString("dd/MM/yyyy")</p>
+                        <div class="review-divider"></div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No hay reseñas disponibles.</p>
+            }
+            <!-- Botón de dejar una reseña -->
+            <button class="leave-review" @onclick="IrAFormulario">Dejar una Reseña</button>
+        </section>
+    </main>
+</div>
+@code {
+    private List<ReseñaClienteDTO> reseñas;
+    private bool mostrarFiltro = false;
+    private string filtroCalificacion = "0";
+    private string filtroFecha = "0";
+    private string filtroAlfabetico = "0";
+    protected override async Task OnInitializedAsync()
+    {
+        reseñas = await ReseñaService.ObtenerReseñasConClientes();
+    }
+    private void MostrarFiltro()
+    {
+        mostrarFiltro = !mostrarFiltro;
+    }
+    private void AplicarFiltros()
+    {
+        // Filtrado por calificación
+        if (filtroCalificacion == "asc")
+        {
+            reseñas = reseñas.OrderBy(r => r.Calificacion).ToList();
+        }
+        else if (filtroCalificacion == "desc")
+        {
+            reseñas = reseñas.OrderByDescending(r => r.Calificacion).ToList();
+        }
+        // Filtrado por fecha
+        if (filtroFecha == "asc")
+        {
+            reseñas = reseñas.OrderBy(r => r.FechaPublicacion).ToList();
+        }
+        else if (filtroFecha == "desc")
+        {
+            reseñas = reseñas.OrderByDescending(r => r.FechaPublicacion).ToList();
+        }
+        // Filtrado alfabético
+        if (filtroAlfabetico == "asc")
+        {
+            reseñas = reseñas.OrderBy(r => r.NombreCliente).ToList();
+        }
+        else if (filtroAlfabetico == "desc")
+        {
+            reseñas = reseñas.OrderByDescending(r => r.NombreCliente).ToList();
+        }
+    }
+    private void IrAFormulario()
+    {
+        Navigation.NavigateTo("/Resena");
+    }
+    private string GetStars(int calificacion)
+    {
+        if (calificacion < 1 || calificacion > 5)
+        {
+            return "";
+        }
+        var estrellas = new string('⭐', calificacion);
+        return string.Join("      ", estrellas.ToCharArray());
+    }
+}

@@ -23,17 +23,19 @@ namespace Pizzeria.Backend.Data
         {
             await _context.Database.EnsureCreatedAsync();
             await CheckRoleAsync();
-            await CheckUserAsync("100", "Calle-3", "312123", "User100@gmail.com", UserType.User);
-            await CheckUserAsync("200", "Calle-3", "312123", "User200@gmail.com", UserType.User);
-            await CheckUserAsync("300", "Calle-3", "312", "User300@gmail.com", UserType.User);
-            await CheckUserAsync("400", "Calle-3", "312", "User400@gmail.com", UserType.User);
-            await CheckUserAsync("500", "Calle-3", "312", "User500@gmail.com", UserType.Client);
-            await CheckUserAsync("600", "Calle-3", "312", "User600@gmail.com", UserType.Client);
-            await CheckUserAsync("700", "Calle-3", "312", "User700@gmail.com", UserType.Client);
-            await CheckUserAsync("800", "Calle-3", "312", "User800@gmail.com", UserType.Client);
+            await CheckUserAsync("100", "John", "Doe", "Calle-3", "312123", "User100@gmail.com", UserType.User);
+            await CheckUserAsync("200", "Jane", "Smith", "Calle-3", "312123", "User200@gmail.com", UserType.User);
+            await CheckUserAsync("300", "Alice", "Johnson", "Calle-3", "312", "User300@gmail.com", UserType.User);
 
-            await CheckUserAsync("900", "Calle-3", "312", "User900@gmail.com", UserType.Admin);
-            await CheckUserAsync("1000", "Calle-3", "312", "User1000@gmail.com", UserType.Admin);
+            await CheckUserAsync("400", "John", "Doe", "Calle-3", "312", "User400@gmail.com", UserType.User);
+            await CheckUserAsync("500", "Jane", "Smith", "Calle-3", "312", "User500@gmail.com", UserType.Client);
+            await CheckUserAsync("600", "Alice", "Johnson", "Calle-3", "312", "User600@gmail.com", UserType.Client);
+            await CheckUserAsync("700", "Bob", "Brown", "Calle-3", "312", "User700@gmail.com", UserType.Client);
+            await CheckUserAsync("800", "Charlie", "Davis", "Calle-3", "312", "User800@gmail.com", UserType.Client);
+
+            await CheckUserAsync("900", "David", "Franco", "Calle-3", "312", "User900@gmail.com", UserType.Admin);
+            await CheckUserAsync("1000", "Emily", "Wilson", "Calle-3", "312", "User1000@gmail.com", UserType.Admin);
+
             await CheckAdministradoresAsync();
             await CheckTrabajadoresAsync();
             await CheckPromocionesAsync();
@@ -50,7 +52,7 @@ namespace Pizzeria.Backend.Data
             await _usersRepository.CheckRoleAsync(UserType.Client.ToString());
         }
         
-        private async Task<User> CheckUserAsync(string Cedula,string Direccion,string Phone ,string email,UserType userType)
+        private async Task<User> CheckUserAsync(string Cedula,string nombre,string apellido,string Direccion,string Phone ,string email,UserType userType)
         {
             var user = await _usersRepository.GetUsersAsync(email);//Valida que no exista un usuario con ese correo
             try
@@ -61,6 +63,8 @@ namespace Pizzeria.Backend.Data
                     user = new User
                     {
                         Cedula = Cedula,
+                        Nombre = nombre,
+                        Apellido = apellido,
                         Direccion = Direccion,
                         PhoneNumber = Phone ,
                         Email = email,

@@ -15,6 +15,8 @@ namespace Pizzeria.Shared.Enums
     {
         
         public string Cedula {  get; set; }
+        public string ?Nombre {  get; set; }
+        public string ?Apellido{  get; set; }
 
         [Display(Name = "Direccion")]
         [Required(ErrorMessage = "El campo {0} es requerido")]

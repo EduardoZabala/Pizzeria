@@ -37,7 +37,16 @@ namespace Pizzeria.Backend.Controllers
 
             return Ok(pedido);
         }
-
+        [HttpGet("{numeroPedido}/cliente")]
+        public async Task<IActionResult> ObtenerIdClientePorNumeroPedido(int numeroPedido)
+        {
+            var pedido = await _context.Pedidos.FirstOrDefaultAsync(p => p.Id == numeroPedido);
+            if (pedido == null)
+            {
+                return NotFound("No se encontró un pedido con ese número."); // Devuelve 404 con mensaje
+            }
+            return Ok(pedido.CedulaUsuario); // Devuelve el ID del cliente
+        }
         [HttpPost]
         public async Task<IActionResult> PostAsync(Pedido pedido)
         {

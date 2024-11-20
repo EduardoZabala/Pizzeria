@@ -1,8 +1,10 @@
-﻿@using CurrieTechnologies.Razor.SweetAlert2;
-@using Microsoft.AspNetCore.Components;
-@using Pizzeria.Frontend.Repositories;
-@using Pizzeria.Shared.Entities;
-@page "/reviews/create"
+﻿@page "/reviews/create"
+@using CurrieTechnologies.Razor.SweetAlert2
+@using Microsoft.AspNetCore.Components
+@using Pizzeria.Shared.Entities
+@inject IRepository Repository
+@inject SweetAlertService SweetAlertService
+@inject NavigationManager NavigationManager
 
 <h3>Crear Reseña</h3>
 
@@ -10,11 +12,6 @@
 
 @code {
     private ReseñaForm? ReseñaForm;
-
-    [Inject] private IRepository Repository { get; set; } = null!;
-    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
-    [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-
     private Reseña Reseña = new();
 
     private async Task CreateAsync()
@@ -28,12 +25,11 @@
         }
 
         Return();
-        await SweetAlertService.FireAsync("Registro creado con éxito.", icon: SweetAlertIcon.Success);
+        await SweetAlertService.FireAsync("Registro creado con éxito.", "success");
     }
 
     private void Return()
     {
-        ReseñaForm!.FormPostedSuccessfully = true;
         NavigationManager.NavigateTo("/reviews");
     }
 }

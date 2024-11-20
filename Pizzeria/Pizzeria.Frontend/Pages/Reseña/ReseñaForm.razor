@@ -1,77 +1,75 @@
-﻿@using CurrieTechnologies.Razor.SweetAlert2;
-@using Microsoft.AspNetCore.Components.Forms;
-@using Microsoft.AspNetCore.Components;
-@using Pizzeria.Shared.Entities;
+﻿@page "/Resena"
+@using Pizzeria.Frontend.Services
+@inject IOrderService OrderService
+@inject SweetAlertService SweetAlertService
+@inject IRepository Repository
+@inject NavigationManager NavigationManager
+@using Radzen
+@using Radzen.Blazor
 
-<EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
-    <DataAnnotationsValidator />
-    <div class="mb-3">
-        <label>Fecha de Publicación:</label>
-        <div>
-            <InputDate class="form-control" @bind-Value="@Reseña.FechaPublicacion" />
-            <ValidationMessage For="@(() => Reseña.FechaPublicacion)" />
+<div class="resena-form-container">
+    <h2>Datos Reseña</h2>
+    <EditForm Model="reseña" OnValidSubmit="EnviarReseña">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="numeroPedido">Número de Pedido</label>
+            <InputNumber id="numeroPedido" class="form-control" @bind-Value="numeroPedido" placeholder="Ingrese el # de su pedido" />
         </div>
 
-        <label>Calificación:</label>
-        <div>
-            <InputNumber class="form-control" @bind-Value="@Reseña.Calificacion" min="1" max="5" />
-            <ValidationMessage For="@(() => Reseña.Calificacion)" />
+        <div class="form-group">
+            <label for="comentario">Reseña</label>
+            <InputTextArea id="comentario" class="form-control" @bind-Value="reseña.Comentario" maxlength="200" placeholder="... Ingrese su reseña (max 200 caracteres)"></InputTextArea>
         </div>
 
-        <label>Comentario:</label>
-        <div>
-            <InputTextArea class="form-control" @bind-Value="@Reseña.Comentario" />
-            <ValidationMessage For="@(() => Reseña.Comentario)" />
+        <div class="rating-container">
+            <label for="calificacion">Calificación</label>
+            <!-- Componente RadzenRating para la calificación -->
+            <RadzenRating @bind-Value="reseña.Calificacion" MaxRating="5"
+                          Style="font-size: 2rem; outline: none;" />
         </div>
 
-        <label>Id de Cliente:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@Reseña.CedulaUsuario" />
-            <ValidationMessage For="@(() => Reseña.CedulaUsuario)" />
-        </div>
-    </div>
+        <p>Calificación seleccionada: @reseña.Calificacion</p>
 
-    <button class="btn btn-primary" type="submit">Guardar Cambios</button>
-    <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
-</EditForm>
+        <div class="button-group">
+            <button type="submit" class="btn btn-primary">Publicar Reseña</button>
+            <button @onclick="() => NavigationManager.NavigateTo(navigateUrl)">Regresar a reseñas</button>
+        </div>
+    </EditForm>
+</div>
 
 @code {
-    private EditContext editContext = null!;
-
-    protected override void OnInitialized()
-    {
-        editContext = new(Reseña);
-    }
-
-    [EditorRequired, Parameter] public Reseña Reseña { get; set; } = null!;
-    [EditorRequired, Parameter] public EventCallback OnValidSubmit { get; set; }
-    [EditorRequired, Parameter] public EventCallback ReturnAction { get; set; }
-    [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-    public bool FormPostedSuccessfully { get; set; } = false;
-
-    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
-    {
-        var formWasEdited = editContext.IsModified();
-
-        if (!formWasEdited || FormPostedSuccessfully)
+    private Reseña reseña = new()
         {
+            FechaPublicacion = DateTime.Now // Fecha automática al crear la reseña
+        };
+
+    private int numeroPedido;
+    private string navigateUrl = "/ResenasPage"; // Definir la URL aquí
+
+    private async Task EnviarReseña()
+    {
+        var idCliente = await OrderService.ObtenerIdClientePorNumeroPedidoAsync(numeroPedido);
+
+        if (idCliente == null)
+        {
+            await SweetAlertService.FireAsync("Error", "El número de pedido ingresado no existe. Para dejar una reseña, favor realizar un pedido.", "error");
             return;
         }
 
-        var result = await SweetAlertService.FireAsync(new SweetAlertOptions
-            {
-                Title = "Confirmación",
-                Text = "¿Deseas abandonar la página y perder los cambios?",
-                Icon = SweetAlertIcon.Warning,
-                ShowCancelButton = true
-            });
+        reseña.CedulaUsuario = idCliente;
 
-        var confirm = !string.IsNullOrEmpty(result.Value);
-        if (confirm)
+        var response = await Repository.PostAsync("/api/Reseña", reseña);
+        if (!response.Error)
         {
-            return;
+            await SweetAlertService.FireAsync("¡Éxito!", "Reseña publicada con éxito.", "success");
+            NavigationManager.NavigateTo("/ResenasPage");
         }
-
-        context.PreventNavigation();
+        else
+        {
+            var message = await response.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, "error");
+        }
     }
 }

@@ -1,0 +1,131 @@
+﻿/* La caja grande que contiene las reseñas */
+.reviews {
+    max-width: 600px;
+    margin: 15px auto;
+    background-color: #fff;
+    padding: 20px;
+    padding-bottom: 70px;
+    padding-top: 45px;
+    border-radius: 25px;
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.1);
+}
+    /* Título de las reseñas, rojo y centrado */
+    .reviews h2 {
+        font-size: 30px;
+        text-align: center;
+        color: #d32f2f;
+        font-weight: bold;
+    }
+/* Estilo de las reseñas */
+.review {
+    margin-bottom: 2px;
+    padding: 10px;
+    position: relative; /* Asegura que la fecha se posicione correctamente */
+}
+/* Separación más clara para la línea divisora entre reseñas */
+.review-divider {
+    border-top: 1px solid #666666; /* Línea divisora más clara */
+    padding: 2px; /* Reducción de espacio entre comentario y línea */
+}
+/* Estilo para los nombres de los clientes */
+.review h3 {
+    margin: 0 0 5px;
+    color: #d32f2f; /* Color rojo para el nombre */
+    font-weight: bold; /* Nombre en negrita */
+    font-size: 20px; /* Tamaño del nombre un poco más grande */
+}
+/* Estilo para las estrellas con más separación */
+.review p.star-rating {
+    font-size: 18px; /* Ajuste de tamaño */
+    color: #ffcc00; /* Estrellas doradas */
+    letter-spacing: 8px; /* Más espacio entre estrellas */
+}
+/* Fecha encima de la línea divisora */
+.review-date {
+    position: absolute;
+    bottom: 0px; /* Fecha más cerca de la línea */
+    right: 15px; /* Alineada a la derecha */
+    font-size: 12px;
+    color: #888; /* Gris claro */
+}
+/* Botón de dejar reseña verde y centrado */
+.leave-review {
+    display: block;
+    width: 50%;
+    text-align: center;
+    padding: 10px 10px;
+    background-color: #388e3c;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 12px;
+    text-align: center; /* Centrado */
+    margin: 50px auto 0; /* Margen superior ajustado para separar el botón */
+}
+    /* Hover para el botón */
+    .leave-review:hover {
+        background-color: #2c6e29;
+    }
+/* Css para el filtro*/
+.filter-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.filter-button {
+    display: flex;
+    align-items: center;
+    padding: 5px 30px;
+    background-color: #f0f0f0; /* Color gris claro */
+    color: #000000; /* Color del texto en gris oscuro */
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    position: relative; /* Para que se mantenga en la esquina superior izquierda de la caja */
+    top: 10px;
+    left: 10px;
+}
+
+    .filter-button i {
+        margin-left: -10px;
+        margin-right: 15px; /* Aumenta el valor si necesitas más separación */
+        font-size: 15px; /* Tamaño del icono */
+    }
+
+    .filter-button:hover {
+        background-color: #b71c1c; /* Cambia este color para el efecto hover */
+    }
+
+.filter-options {
+    margin-top: 20px;
+    background-color: #f4f4f4;
+    padding: 15px;
+    border-radius: 8px;
+    display: inline-block;
+}
+
+    .filter-options label {
+        margin-right: 10px;
+    }
+
+    .filter-options select {
+        margin-right: 10px;
+        padding: 5px;
+        border-radius: 5px;
+    }
+
+.apply-filters {
+    background-color: #388e3c;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+    .apply-filters:hover {
+        background-color: #2c6e29;
+    }
