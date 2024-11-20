@@ -1,0 +1,20 @@
+﻿.centrar_productos {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Dise�o de cuadr�cula para las tarjetas */
+.productos_menu-grid {
+    width: 1200px;
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4rem;
+    background-color: #FFF2E5;
+    padding: 20px;
+    height: 100%;
+}
+
+

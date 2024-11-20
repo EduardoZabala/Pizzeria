@@ -23,6 +23,9 @@
             <InputNumber class="form-control" @bind-Value="@Producto.Cantidad" />
             <ValidationMessage For="@(() => Producto.Cantidad)" />
         </div>
+        <div class="mb-3">
+            <InputImg Label="Foto" ImageSelected="ImageSelected" ImageURL="@imageUrl" />
+        </div>
     </div>
 
     <button class="btn btn-primary" type="submit">Guardar Cambios</button>
@@ -31,18 +34,22 @@
 
 @code {
     private EditContext editContext = null!;
-
-    protected override void OnInitialized()
-    {
-        editContext = new(Producto);
-    }
-
     [EditorRequired, Parameter] public Producto Producto { get; set; } = null!;
     [EditorRequired, Parameter] public EventCallback OnValidSubmit { get; set; }
     [EditorRequired, Parameter] public EventCallback ReturnAction { get; set; }
     [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
     public bool FormPostedSuccessfully { get; set; } = false;
+    private string? imageUrl;
 
+    protected override void OnInitialized()
+    {
+        editContext = new(Producto);
+    }
+    private void ImageSelected(string imagenBase64)
+    {
+        Producto.Foto = imagenBase64;
+        imageUrl = null;
+    }
     private async Task OnBeforeInternalNavigation(LocationChangingContext context)
     {
         var formWasEdited = editContext.IsModified();

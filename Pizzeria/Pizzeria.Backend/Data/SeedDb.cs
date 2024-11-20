@@ -151,10 +151,20 @@ namespace Pizzeria.Backend.Data
         {
             if (!_context.Productos.Any())
             {
-                _context.Productos.Add(new Producto { Nombre = "Pizza Pepperoni", Precio = 12000, Cantidad = 2 });
-                _context.Productos.Add(new Producto { Nombre = "Pizza Hawaiana", Precio = 14000, Cantidad = 1, });
-                _context.Productos.Add(new Producto { Nombre = "Pizza Margarita", Precio = 13000, Cantidad = 1 });
-                _context.Productos.Add(new Producto { Nombre = "Pizza Cuatro Quesos", Precio = 15000, Cantidad = 2 });
+                var image1 = await _fileStorage.ProccessFile("images\\Pizza-4_cheese_menu.jpeg");
+                var image2 = await _fileStorage.ProccessFile("images\\Pizza-Vegetarian.jpeg");
+                var image3 = await _fileStorage.ProccessFile("images\\Pizza-Hawaiana.jpeg");
+                var image4 = await _fileStorage.ProccessFile("images\\Pizza-Ranchera.jpeg");
+                var image5 = await _fileStorage.ProccessFile("images\\pilsen.jpeg");
+                var image6 = await _fileStorage.ProccessFile("images\\cocaCola.jpeg");
+                var image7 = await _fileStorage.ProccessFile("images\\7Up.jpeg");
+                _context.Productos.Add(new Producto { Nombre = "Pizza Cuatro Quesos", Precio = 12000, Cantidad =10,Foto=await _fileStorage.SaveFileAsync(image1,"jpg") });
+                _context.Productos.Add(new Producto { Nombre = "Pizza Vegetariana", Precio = 14000, Cantidad = 10,Foto=await _fileStorage.SaveFileAsync(image2,"jpg") });
+                _context.Productos.Add(new Producto { Nombre = "Pizza Hawaiana", Precio = 13000, Cantidad =10,Foto = await _fileStorage.SaveFileAsync(image3, "jpg") });
+                _context.Productos.Add(new Producto { Nombre = "Pizza Ranchera", Precio = 15000, Cantidad = 10, Foto = await _fileStorage.SaveFileAsync(image4, "jpg") });_context.Productos.Add(new Producto { Nombre = "Pizza Pepperoni", Precio = 12000, Cantidad =10,Foto=await _fileStorage.SaveFileAsync(image1,"jpg") });
+                _context.Productos.Add(new Producto { Nombre = "Cerveza Pilsen", Precio = 14000, Cantidad = 10,Foto=await _fileStorage.SaveFileAsync(image5,"jpg") });
+                _context.Productos.Add(new Producto { Nombre = "Coca Cola", Precio = 13000, Cantidad =10,Foto = await _fileStorage.SaveFileAsync(image6, "jpg") });
+                _context.Productos.Add(new Producto { Nombre = "7Up", Precio = 15000, Cantidad = 10, Foto = await _fileStorage.SaveFileAsync(image7, "jpg") });
             }
 
             await _context.SaveChangesAsync();

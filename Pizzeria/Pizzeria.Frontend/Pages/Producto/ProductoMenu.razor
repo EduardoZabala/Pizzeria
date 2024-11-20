@@ -1,0 +1,86 @@
+﻿@inject IRepository Repository
+@inject NavigationManager NavigationManager
+@inject SweetAlertService SweetAlertService
+@page "/Menu"
+
+<GenericList MyList="Producto">
+    <Body>
+        <div class="promociones-container">
+            <h2 class="promociones-titulo">Menu</h2>
+            <div class="centrar_productos">
+                <div class="productos_menu-grid">
+                    @for(int i = 0 ; i < 4; i++)
+                    {
+                        <div class="promocion-card">
+                            <img src=@($"data:image/jpg;base64,{Getphoto(Producto[i].Foto)}") class="promocion-imagen" />
+                            <h3>
+                                @Producto[i].Nombre
+                            </h3>
+                            <p>
+                                Aqui va texto epico
+                            </p>
+                            <button class="boton-agregar" @onclick="() => GoCar()">Agregar al carrito</button>
+                        </div>
+                    }
+                </div>
+                <div class="productos_menu-grid">
+                    @for (int i = 5; i < 8; i++)
+                    {
+                        <div class="promocion-card">
+                            <img src=@($"data:image/jpg;base64,{Getphoto(Producto[i].Foto)}") class="promocion-imagen" />
+                            <h3>
+                                @Producto[i].Nombre
+                            </h3>
+                            
+                            <button class="boton-agregar" @onclick="() => GoCar()">Agregar al carrito</button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </Body>
+</GenericList>
+
+@code {
+    public List<Producto> Producto { get; set; }
+    public List<Archivo> Archivos { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+    private async Task LoadAsync()
+    {
+        await base.OnInitializedAsync();
+        var responseHttp = await Repository.GetAsync<List<Producto>>("api/Producto");
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        Producto = responseHttp.Response!;
+        var responseHttp2 = await Repository.GetAsync<List<Archivo>>("api/Archivos");
+        if (responseHttp2.Error)
+        {
+            var message = await responseHttp2.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        Archivos = responseHttp2.Response!;
+    }
+    private string Getphoto(string imageName)
+    {
+        Archivo fotoPromocion = Archivos.Find(A => A.FileName == imageName);
+        if (fotoPromocion == null)
+        {
+            return "";
+        }
+        return Convert.ToBase64String(fotoPromocion.Content);
+    }
+    private void GoCar()
+    {
+        NavigationManager.NavigateTo("orders/create");
+    }
+
+
+}

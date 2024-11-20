@@ -17,6 +17,7 @@
                     <th>Nombre</th>
                     <th>Precio</th>
                     <th>Cantidad</th>
+                    <th>Foto</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -25,8 +26,12 @@
                 {
                     <tr>
                         <td>@producto.Nombre</td>
-                        <td>@producto.Precio.ToString("C")</td>
+                        <td>@producto.Precio</td>
                         <td>@producto.Cantidad</td>
+                        <td>
+                            <img src="@($"data:image/jpg;base64,{Getphoto(producto.Foto)}")" width="50" height="50" style="border-radius:50%" />
+
+                        </td>
                         <td>
                             <a href="/products/edit/@producto.Id" class="btn btn-warning">Editar</a>
                             <button class="btn btn-danger" @onclick=@(() => DeleteAsync(producto))>Borrar</button>
@@ -40,6 +45,7 @@
 
 @code {
     public List<Producto> Productos { get; set; }
+    public List<Archivo> Archivos { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -56,6 +62,14 @@
             return;
         }
         Productos = responseHttp.Response!;
+        var responseHttp2 = await Repository.GetAsync<List<Archivo>>("api/Archivos");
+        if (responseHttp2.Error)
+        {
+            var message = await responseHttp2.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        Archivos = responseHttp2.Response!;
     }
 
     private async Task DeleteAsync(Producto producto)
@@ -84,5 +98,14 @@
 
         await LoadAsync();
         await SweetAlertService.FireAsync("Registro borrado con éxito.", icon: SweetAlertIcon.Success);
+    }
+    private string Getphoto(string imageName)
+    {
+        Archivo fotoPromocion = Archivos.Find(A => A.FileName == imageName);
+        if (fotoPromocion == null)
+        {
+            return "";
+        }
+        return Convert.ToBase64String(fotoPromocion.Content);
     }
 }

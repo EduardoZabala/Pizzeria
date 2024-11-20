@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pizzeria.Backend.Data;
+using Pizzeria.Backend.Helpers;
 using Pizzeria.Shared.Entities;
 
 namespace Pizzeria.Backend.Controllers
@@ -14,10 +15,12 @@ namespace Pizzeria.Backend.Controllers
     public class ProductoController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IFileStorage _fileStorage;
 
-        public ProductoController(DataContext context)
+        public ProductoController(DataContext context,IFileStorage fileStorage)
         {
             _context = context;
+            _fileStorage = fileStorage;
         }
 
         [HttpGet]
@@ -41,6 +44,11 @@ namespace Pizzeria.Backend.Controllers
         [HttpPost]
         public async Task<IActionResult> PostAsync(Producto producto)
         {
+            if (!string.IsNullOrEmpty(producto.Foto))
+            {
+                var fotoPromocion = Convert.FromBase64String(producto.Foto);
+                producto.Foto = await _fileStorage.SaveFileAsync(fotoPromocion, ".jpg");
+            }
             _context.Add(producto);
             await _context.SaveChangesAsync();
             return Ok(producto);
@@ -63,6 +71,11 @@ namespace Pizzeria.Backend.Controllers
         [HttpPut]
         public async Task<IActionResult> PutAsync(Producto producto)
         {
+            if (!string.IsNullOrEmpty(producto.Foto))
+            {
+                var fotoPromocion = Convert.FromBase64String(producto.Foto);
+                producto.Foto = await _fileStorage.SaveFileAsync(fotoPromocion, ".jpg");
+            }
             _context.Update(producto);
             await _context.SaveChangesAsync();
             return Ok(producto);

@@ -1,12 +1,12 @@
 ﻿<div class="header">
     <h1>Pizzería Italiana</h1>
     <div class="nav">
-        <a href="#">Inicio</a>
-        <a href="#">Menu</a>
-        <a href="/orders/create">Pedidos</a>
-        <a href="/Promociones">Promociones</a>
-        <a href="#">Reseñas</a>
-        <a href="/Login">Mi cuenta</a>
+        <a href="/"><i class="fa-solid fa-house"></i> Inicio</a>
+        <a href="/Menu"><i class="fa-solid fa-pizza-slice"></i> Menu</a>
+        <a href="/orders/create"><i class="fa-solid fa-clipboard-list"></i> Pedidos</a>
+        <a href="/Promociones"><i class="fa-solid fa-magnifying-glass-dollar"></i> Promociones</a>
+        <a href="#"><i class="fa-solid fa-receipt"></i> Reseñas</a>
+        <a href="/Login"><i class="fa-solid fa-user-large"></i> Mi cuenta</a>
         <AuthorizeView>
             <Authorized>
                 <span>Hola, @context.User.Identity!.Name</span>
