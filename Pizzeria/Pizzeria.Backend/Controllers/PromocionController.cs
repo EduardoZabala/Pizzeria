@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Pizzeria.Backend.Data;
 using Pizzeria.Backend.Helpers;
 using Pizzeria.Shared.Entities;
+using Pizzeria.Shared.DTOs;
 
 namespace Pizzeria.Backend.Controllers
 {
@@ -17,7 +18,7 @@ namespace Pizzeria.Backend.Controllers
         private readonly IFileStorage _fileStorage;
         private readonly DataContext _context;
 
-        public PromocionController(DataContext context,IFileStorage fileStorage)
+        public PromocionController(DataContext context, IFileStorage fileStorage)
         {
             _fileStorage = fileStorage;
             _context = context;
@@ -40,6 +41,32 @@ namespace Pizzeria.Backend.Controllers
 
             return Ok(country);
         }
+        [HttpGet]
+        [Route("GetStadistics")]
+        public List<PromocionDTO> GetStadistics()
+        {
+            return _context.Promociones
+                .Join(
+                    _context.Pedidos,
+                    promocion => promocion.Id,
+                    pedido => pedido.IdPromocion,
+                    (promocion, pedido) => new { promocion, pedido }
+                )
+                .Join(
+                    _context.PagoEfectivos,
+                    joined => joined.pedido.Id,
+                    pago => pago.IdPedido,
+                    (joined, pago) => joined.promocion
+                )
+                .GroupBy(pr => new { pr.Id, pr.nombre })
+                .Select(g => new PromocionDTO
+                {
+                    Data = g.Count(), // Conteo total de ventas por promoción
+                    Titulo = g.Key.nombre
+                })
+                .ToList();
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> PostAsync(Promocion promocion)

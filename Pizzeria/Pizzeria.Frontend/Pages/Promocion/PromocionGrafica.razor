@@ -1,0 +1,87 @@
+﻿@page "/promotions/plot"
+@using ChartJs.Blazor.ChartJS.Common;
+@using ChartJs.Blazor.ChartJS.BarChart;
+
+@inject IRepository Repository
+@inject SweetAlertService SweetAlertService
+<div class="grid-container">
+    <div class="left-column">
+        <BarChart @ref="barChart"  />
+    </div>
+    <div class="right-column">
+        <h3>Importante</h3>
+        <p>Distribución de Promociones Aplicadas: Esta gráfica muestra la cantidad de veces que se han aplicado las distintas promociones. <br />
+            La promoción 2x1 Pizzas Medianas lidera, seguida de cerca por el Combo para Almorzar. Las promociones 1 Pizza Ranchera + 2 Coca Colas<br/> 
+            y La Reunión Perfecta tienen una menor participación, lo que sugiere que podrían necesitar ajustes para aumentar su efectividad
+        </p>
+        <div class="mb-3">
+            <a class="btn btn-primary" href="/promotions">Volver</a>
+        </div>
+    
+    </div>
+</div>
+@code {
+    private BarChart barChart = default!;
+    private List<PromocionDTO> Promociones { get; set; }
+
+    private async Task LoadAsync()
+    {
+        await base.OnInitializedAsync();
+        var responseHttp = await Repository.GetAsync<List<PromocionDTO>>("api/Promocion/GetStadistics");
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        Promociones = responseHttp.Response!;
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadAsync();
+            await RenderManhattanAsync();
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+    
+    private string GenerateRandomColor()
+    {
+        var random = new Random();
+        return $"rgb({random.Next(0, 256)}, {random.Next(0, 256)}, {random.Next(0, 256)})";
+    }
+    private async Task RenderManhattanAsync()
+    {
+        var data = new ChartData
+            {
+                Labels = new List<string> { "Año 2024" },
+                Datasets = Promociones.Select(p => new BarChartDataset
+                {
+                    Label = p.Titulo, // El título de cada promoción
+                    Data = new List<double?> { (double)p.Data },    // Los valores específicos de la promoción
+                    BackgroundColor = new List<string> { GenerateRandomColor() },
+                    CategoryPercentage = 0.8,
+                    BarPercentage = 1,
+                }).ToList<IChartDataset>()
+
+            };
+
+        var options = new BarChartOptions();
+
+        options.Interaction.Mode = InteractionMode.Index;
+
+        options.Plugins.Title!.Text = "PROMOCIONES";
+        options.Plugins.Title.Display = true;
+        options.Plugins.Title.Font = new ChartFont { Size = 20 };
+
+        options.Responsive = true;
+
+        options.Scales.X!.Title = new ChartAxesTitle { Text = "Promociones", Display = true };
+        options.Scales.Y!.Title = new ChartAxesTitle { Text = "Cantidad", Display = true };
+
+        await barChart.InitializeAsync(data, options);
+    }
+
+}

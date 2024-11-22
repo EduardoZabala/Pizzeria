@@ -2,11 +2,16 @@
 @inject NavigationManager NavigationManager
 @inject SweetAlertService SweetAlertService
 @page "/promotions"
-
+@attribute [Authorize(Roles = "Admin")]
 <h3>Promociones</h3>
+<div style="display:flex;gap:2rem;">
 
-<div class="mb-3">
-    <a class="btn btn-primary" href="/promotions/create">Nueva Promoción</a>
+    <div class="mb-3">
+        <a class="btn btn-primary" href="/promotions/create">Nueva Promoción</a>
+    </div>
+    <div class="mb-3">
+        <a class="btn btn-primary" href="/promotions/plot">Consultar Rendimiento</a>
+    </div>
 </div>
 
 <GenericList MyList="Promociones">
@@ -31,7 +36,7 @@
                         <td>
 
                             @promocion.Descripcion
-                         </td>
+                        </td>
                         <td>
                             @promocion.VlrDescuento
                         </td>
@@ -62,7 +67,7 @@
     {
         await LoadAsync();
     }
-    public List<Archivo> Archivos{ get; set; }
+    public List<Archivo> Archivos { get; set; }
 
     private async Task LoadAsync()
     {
@@ -88,7 +93,7 @@
 
     private string Getphoto(string imageName)
     {
-        Archivo fotoPromocion =  Archivos.Find(A => A.FileName == imageName);
+        Archivo fotoPromocion = Archivos.Find(A => A.FileName == imageName);
         if (fotoPromocion == null)
         {
             return "";

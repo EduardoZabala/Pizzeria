@@ -14,6 +14,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 //Agregamos el proyecto backend
 builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7000") });
 builder.Services.AddScoped<IRepository, Repository>();
+builder.Services.AddBlazorBootstrap();
 builder.Services.AddScoped<IReseñaService, ReseñaService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddAuthorizationCore();

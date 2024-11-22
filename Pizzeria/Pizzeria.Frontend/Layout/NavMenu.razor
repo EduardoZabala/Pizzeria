@@ -1,6 +1,5 @@
-﻿<AuthorizeView Roles="Admin">
-    <Authorized>
-        <div class="top-row ps-3 navbar navbar-dark"style="background-color: #c0392b;border: 1.2px solid #000;">
+﻿
+        <div class="top-row ps-3 navbar navbar-dark" style="background-color: #c0392b;border: 1.2px solid #000;">
             <div class="container-fluid">
                 <a class="navbar-brand" href="">Pizzeria.Frontend</a>
                 <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -55,18 +54,10 @@
                         <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Reseñas
                     </NavLink>
                 </div>
-                
+
             </nav>
         </div>
-    </Authorized>
-    <NotAuthorized>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="reviews">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Mi cuenta
-            </NavLink>
-        </div>
-    </NotAuthorized>
-</AuthorizeView>
+
 
 @code {
     private bool collapseNavMenu = true;
