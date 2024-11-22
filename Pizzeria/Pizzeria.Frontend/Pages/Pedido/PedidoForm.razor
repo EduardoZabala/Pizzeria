@@ -32,6 +32,11 @@
                             {
                                 <option value="@pro.Id">@pro.Nombre</option>
                             }
+                            @foreach (var pro in Promocion)
+                            {
+                                <option value="@pro.Id">@pro.nombre</option>
+                            }
+
                         </InputSelect>
                         <button class="btn btn-primary" @onclick="() => AgregarProductoAsync(selectedProducto)">Agregar Producto</button>
                     </div>
@@ -43,7 +48,6 @@
             <button class="button" @onclick="VolverAlMenu">Volver al Menu</button>
             <button class="button" @onclick="CancelarPedido">Cancelar Pedido</button>
             <button class="button" @onclick="ConfirmarPedidoAsync">Confirmar pedido</button>
-            @*TODO:Falta que confirma me redirija al de pagos*@
         </div>
     </div>
 </EditForm>
@@ -54,6 +58,7 @@
     [Parameter] public int ?promocionId { get; set; }
     public bool FormPostedSuccessfully { get; set; } = false;
     private List<int> ProductosSeleccionados = new List<int>();
+    private List<Promocion> Promocion = new List<Promocion>();
     private int selectedProducto { get; set; }
     [EditorRequired] public Pedido Pedidos { get; set; } = new Pedido();
 
@@ -120,7 +125,17 @@
             VolverLogin();
             return;
         }
-        Productos = responseHttp.Response!;
+        Productos = responseHttp.Response!; 
+        
+        var response2Http = await Repository.GetAsync<List<Promocion>>("/api/Promocion");
+        if (response2Http.Error)
+        {
+            var message = await response2Http.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message);
+            VolverLogin();
+            return;
+        }
+        Promocion = response2Http.Response!;
     }
     private async Task<bool> IsAuthenticatedAsync()
     {
@@ -199,13 +214,13 @@
     {
         NavigationManager.NavigateTo("/Login");
     }
-    private void VolverAlMenu()//TODO:Aqui va la referencia del menu
+    private void VolverAlMenu()
     {
-        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/Menu");
     }
     private void CancelarPedido()
     {
-        NavigationManager.NavigateTo("/orders/create");
+        NavigationManager.NavigateTo("/Menu");
     }
 
 }

@@ -93,12 +93,6 @@ namespace Pizzeria.Backend.Controllers
         }
         private async Task<ActionResponse<string>> SendEmailAsync(User user, string msn)
         {
-            var myToken = await _usersRepository.GenerateEmailConfirmationTokenAsync(user);
-            var tokenLink = Url.Action("ConfirmEmail", "accounts", new
-            {
-                userid = user.Id,
-                token = myToken
-            }, HttpContext.Request.Scheme, _configuration["Url Frontend"]);
             return _mailHelper.SendMail(user.UserName, user.Email,
                 $"Pizzeria - Importante  ",
                 $"<h1>Pizzeria</h1>" +

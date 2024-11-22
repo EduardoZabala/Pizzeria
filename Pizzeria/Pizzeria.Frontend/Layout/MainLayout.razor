@@ -1,12 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <AuthorizeView Roles="Admin">
+    <AuthorizeView >
     <Authorized>
         <div class="sidebar">
             <NavMenu />
         </div>
     </Authorized>
+
     </AuthorizeView>
     <main>
        <NavPizza />

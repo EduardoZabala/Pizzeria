@@ -1,14 +1,15 @@
-﻿
-        <div class="top-row ps-3 navbar navbar-dark" style="background-color: #c0392b;border: 1.2px solid #000;">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="">Pizzeria.Frontend</a>
-                <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </div>
+﻿<AuthorizeView Roles="Admin">
+    <div class="top-row ps-3 navbar navbar-dark" style="background-color: #c0392b;border: 1.2px solid #000;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="">Pizzeria.Frontend</a>
+            <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
-        <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu" style="background-color: #007f00;">
-            <nav class="flex-column">
+    </div>
+    <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu" style="background-color: #007f00;">
+        <nav class="flex-column">
+            <Authorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                         <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
@@ -55,9 +56,29 @@
                     </NavLink>
                 </div>
 
-            </nav>
+            </Authorized>
+        </nav>
+    </div>
+</AuthorizeView>
+<AuthorizeView Roles="Client">
+    <div class="top-row ps-3 navbar navbar-dark" style="background-color: #c0392b;border: 1.2px solid #000;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="">Pizzeria.Frontend</a>
+            <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
-
+    </div>
+    <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu" style="background-color: #007f00;">
+        <nav class="flex-column">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/my-payments">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Mis Pagos
+                </NavLink>
+            </div>
+        </nav>
+    </div>
+</AuthorizeView>
 
 @code {
     private bool collapseNavMenu = true;

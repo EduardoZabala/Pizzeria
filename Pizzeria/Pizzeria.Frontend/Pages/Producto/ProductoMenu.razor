@@ -17,8 +17,10 @@
                                 @Producto[i].Nombre
                             </h3>
                             <p>
-                                Aqui va texto epico
+                                @Textos[i]
                             </p>
+                            <p>@("Valor: "+Producto[i].Precio)</p>
+                            <p>@("Cantidad: " + Producto[i].Cantidad)</p>
                             <button class="boton-agregar" @onclick="() => GoCar()">Agregar al carrito</button>
                         </div>
                     }
@@ -31,7 +33,8 @@
                             <h3>
                                 @Producto[i].Nombre
                             </h3>
-                            
+                            <p>@("Valor: " + Producto[i].Precio)</p>
+                            <p>@("Cantidad: " + Producto[i].Cantidad)</p>
                             <button class="boton-agregar" @onclick="() => GoCar()">Agregar al carrito</button>
                         </div>
                     }
@@ -44,6 +47,13 @@
 @code {
     public List<Producto> Producto { get; set; }
     public List<Archivo> Archivos { get; set; }
+    public List<string> Textos = new List<string>
+    {
+        "Para los amantes del queso. Combina mozzarella, gorgonzola, parmesano y provolón",
+        "Pizza saludable con ingredientes seleccionados: Pimientos, champiñones, espinacas, cebolla morada y aceitunas negras",
+        "Pizza con jamón, piña y queso, una combinación perfecta.",
+        "Jugosos trozos de carne de res, chorizo, maíz dulce, todo cubierto con mozzarella"
+    };
     protected override async Task OnInitializedAsync()
     {
         await LoadAsync();
