@@ -15,11 +15,13 @@
             <thead>
                 <tr>
                     <th>Cedula</th>
+                    <th>Nombre Completo</th>
                     <th>Direccion</th>
                     <th>Telefono</th>
                     <th>Correo</th>
                     <th>IdUsuario</th>
-                    <th>UserName</th>
+                    <th>Acciones</th>
+                    <th>Administrar</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +30,9 @@
                     <tr>
                         <td>
                             @usuario.Cedula
+                        </td>
+                        <td>
+                            @(usuario.Nombre +" "+usuario.Apellido ) 
                         </td>
                         <td>
                             @usuario.Direccion
@@ -42,8 +47,12 @@
                             @usuario.UserName
                         </td>
                         <td>
-                            @*<a href="/users/edit/@usuario.Cedula" class="btn btn-warning">Editar</a>
-                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(usuario))>Borrar</button> *@
+                            <a href="/users/edit/@usuario.Cedula" class="btn btn-warning">Editar</a>
+                            <button class="btn btn-danger" @onclick=@(() => DeleteAsync(usuario))>Borrar</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-info" @onclick=@(() => ActivarUsuario(usuario.Id))>ActivarUsuario</button>
+                            <button class="btn btn-secondary" @onclick=@(() => DesactivarUsuario(usuario.Id))>DesabilitarUsuario</button>
                         </td>
                     </tr>
                 }
@@ -55,7 +64,6 @@
 @code {
 
     public List<User> users { get; set; }
-    @*NOTA: Se me ocurre combinar ese index con los de Usuarios, ahora miro*@
 
     protected override async Task OnInitializedAsync()
     {
@@ -73,6 +81,30 @@
             return;
         }
         users = responseHppt.Response!;
+
+    }
+    private async Task ActivarUsuario(string userId)
+    {
+        var responseHppt = await Repository﻿.GetAsync($"api/accounts/ManagerAccount?userId={userId}&Active={true}");
+        if (responseHppt.Error)
+        {
+            var message = await responseHppt.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        await SweetAlertService.FireAsync("Activacion Usuario","El usuario ha sido activado correctamente", SweetAlertIcon.Success);
+
+    }
+    private async Task DesactivarUsuario(string userId)
+    {
+        var responseHppt = await Repository﻿.GetAsync($"api/accounts/ManagerAccount?userId={userId}&Active={false}");
+        if (responseHppt.Error)
+        {
+            var message = await responseHppt.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        await SweetAlertService.FireAsync("Activacion Usuario", "El usuario ha sido desactivado correctamente", SweetAlertIcon.Success);
 
     }
     private async Task DeleteAsync(User usuario)

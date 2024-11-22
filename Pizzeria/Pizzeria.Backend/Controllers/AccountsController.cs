@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -67,6 +68,45 @@ namespace Pizzeria.Backend.Controllers
                 $"<b><a href ={tokenLink}>Confirmar Email</a></b>");
         }
 
+        [HttpGet]
+        [Route("ManagerAccount")]
+        public async Task<ActionResult> ManagerAccountAsync(string userId, bool Active)
+        {
+
+            var _user = await _usersRepository.GetUserAsync(new Guid(userId));
+            if (_user == null)
+            {
+                return NotFound();
+            }
+            _user.EmailConfirmed = Active ? true : false;
+            string msn = Active ? "Estimado usuario su cuenta ha sido activada" : "Estimado usuario su cuenta ha sido desactivada, " +
+                "para mas informacion : Pizzeria.Italiana.Med@gmail.com";
+            var result = await SendEmailAsync(_user, msn);
+            if (result.WasSuccess)
+            {
+                _context.Update(_user);
+                await _context.SaveChangesAsync();
+                return NoContent();
+            }
+
+            return BadRequest(result.Message);
+        }
+        private async Task<ActionResponse<string>> SendEmailAsync(User user, string msn)
+        {
+            var myToken = await _usersRepository.GenerateEmailConfirmationTokenAsync(user);
+            var tokenLink = Url.Action("ConfirmEmail", "accounts", new
+            {
+                userid = user.Id,
+                token = myToken
+            }, HttpContext.Request.Scheme, _configuration["Url Frontend"]);
+            return _mailHelper.SendMail(user.UserName, user.Email,
+                $"Pizzeria - Importante  ",
+                $"<h1>Pizzeria</h1>" +
+                $"<p>{msn}</p>"
+                );
+
+        }
+
         [HttpGet("ConfirmEmail")]
         public async Task<ActionResult> ConfirmEmailAsync(string userId, string token)
         {
@@ -85,11 +125,12 @@ namespace Pizzeria.Backend.Controllers
                 }
                 return NoContent();
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex);
                 return NoContent();
             }
-            
+
         }
         [HttpPost("Login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginDTO model)
