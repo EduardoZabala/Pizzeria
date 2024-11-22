@@ -1,0 +1,73 @@
+﻿@using CurrieTechnologies.Razor.SweetAlert2;
+@using Microsoft.AspNetCore.Components;
+@using Pizzeria.Frontend.Repositories;
+@using Pizzeria.Shared.Entities;
+@page "/users/edit/{Id:int}"
+
+@if (userDTO is null)
+{
+    <Loading />
+}
+else
+{
+    <UsersForm @ref="usersForms" userDTO="userDTO" FormTitle="Editar Usuario" OnValidSubmit="EditAsync" ReturnAction="Return" />
+}
+
+@code {
+    private UserDTO? userDTO;
+    private UsersForm? usersForms;
+
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+    [Inject] private IRepository Repository { get; set; } = null!;
+    [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+    [Parameter] public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseHttp = await Repository.GetAsync<UserDTO>($"api/accounts/{Id}");
+
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                NavigationManager.NavigateTo("/Users");
+            }
+            else
+            {
+                var messageError = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", messageError, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            userDTO = responseHttp.Response;
+        }
+    }
+    private async Task EditAsync()
+    {
+        var responseHttp = await Repository.PutAsync("api/accounts/", userDTO);
+
+        if (responseHttp.Error)
+        {
+            var mensajeError = await responseHttp.GetErrorMessageAsync();
+            await SweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            return;
+        }
+
+        Return();
+        var toast = SweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro actualizado con éxito.");
+    }
+
+    private void Return()
+    {
+        usersForms!.FormPostedSuccessfully = true;
+        NavigationManager.NavigateTo("/Users");
+    }
+}

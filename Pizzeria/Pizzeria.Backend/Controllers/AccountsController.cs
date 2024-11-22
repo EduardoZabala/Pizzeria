@@ -155,10 +155,31 @@ namespace Pizzeria.Backend.Controllers
             return BadRequest("Email o contraseña incorrectos.");
         }
 
+
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
             return Ok(await _context.Users.ToListAsync());
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAsync(string id)
+        {
+            var _user = await _context.Users.FirstOrDefaultAsync(c => c.Cedula == id);
+            if (_user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_user);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> PutAsync(User user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+            return Ok(user);
         }
         private TokenDTO BuildToken(User user)
         {
