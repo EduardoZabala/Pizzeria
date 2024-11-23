@@ -111,7 +111,7 @@
         pagoEfectivo.IdPedido = orderId;
         pagoEfectivo.FechaPago = DateTime.Now;
         pagoEfectivo.Estado = false; //Se crea con estado pendiente
-        var responseHttp = await Repository.PostAsync("/api/PagoEfectivo", pagoEfectivo);
+        var responseHttp = await Repository.PostAsync($"/api/PagoEfectivo/?userId={userInfo.Cedula}", pagoEfectivo);
         if (responseHttp.Error)
         {
             var message = await responseHttp.GetErrorMessageAsync();

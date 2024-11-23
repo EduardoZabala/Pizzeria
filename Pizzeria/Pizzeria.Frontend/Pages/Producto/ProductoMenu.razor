@@ -19,7 +19,7 @@
                             <p>
                                 @Textos[i]
                             </p>
-                            <p>@("Valor: "+Producto[i].Precio)</p>
+                            <p>@("Valor: $"+Producto[i].Precio)</p>
                             <p>@("Cantidad: " + Producto[i].Cantidad)</p>
                             <button class="boton-agregar" @onclick="() => GoCar()">Agregar al carrito</button>
                         </div>
@@ -33,7 +33,7 @@
                             <h3>
                                 @Producto[i].Nombre
                             </h3>
-                            <p>@("Valor: " + Producto[i].Precio)</p>
+                            <p>@("Valor: $" + Producto[i].Precio)</p>
                             <p>@("Cantidad: " + Producto[i].Cantidad)</p>
                             <button class="boton-agregar" @onclick="() => GoCar()">Agregar al carrito</button>
                         </div>

@@ -19,7 +19,7 @@
                             <p>
                                 @promocion.Descripcion
                             </p>
-                            <p>@("Valor: "+ promocion.VlrDescuento)</p>
+                            <p>@("Valor: $"+ promocion.VlrDescuento)</p>
                             <button class="boton-agregar" @onclick="() => AgregarDescuento(promocion.Id)">Agregar al carrito</button>
                         </div>
                     }
